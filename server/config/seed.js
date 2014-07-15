@@ -55,14 +55,20 @@ Album.find({}).remove(function () {
   Album.create({
       name: 'Foo',
       description: 'Album foo description',
-      startDate: new Date,
-      endDate: new Date,
+      startDate: new Date(),
+      endDate: new Date(),
       locations: []
     }, {
       name: 'Bar',
       description: 'Album bar description',
       startDate: new Date(1293682278 * 1000),
       endDate: new Date(1293683278 * 1000),
+      locations: []
+    }, {
+      name: 'Baz',
+      description: 'Album baz yay',
+      startDate: new Date(1293682178 * 1000),
+      endDate: new Date(1293683178 * 1000),
       locations: []
     }
   );

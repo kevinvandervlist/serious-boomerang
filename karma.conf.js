@@ -11,6 +11,8 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
+      'client/assets/js/phantomjs.backfill.js',
+      'client/assets/js/rx.all.js',
       'client/bower_components/jquery/dist/jquery.js',
       'client/bower_components/angular/angular.js',
       'client/bower_components/angular-mocks/angular-mocks.js',
@@ -71,6 +73,7 @@ module.exports = function(config) {
     // - PhantomJS
     // - IE (only Windows)
     browsers: ['PhantomJS'],
+    //browsers: ['Firefox'],
 
 
     // Continuous Integration mode
