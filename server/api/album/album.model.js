@@ -24,7 +24,8 @@ var AlbumSchema = new Schema({
     required: true
   },
   locations: {
-    type: [Location]
+    type: [Location],
+    ref: Location
   }
 });
 

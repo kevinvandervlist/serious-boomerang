@@ -13,7 +13,7 @@ var validationError = function(res, err) {
  * Get list of albums
  */
 exports.index = function(req, res) {
-  Album.find({}, '-salt -hashedPassword', function (err, albums) {
+  Album.find({}, function (err, albums) {
     if(err) return res.send(500, err);
     res.json(200, albums);
   });

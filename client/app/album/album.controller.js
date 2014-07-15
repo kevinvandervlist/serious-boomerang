@@ -2,21 +2,21 @@
 
 angular.module('seriousBoomerangApp')
   .controller('AlbumCtrl', function ($scope, $http) {
-    $scope.awesomeThings = [];
+    $scope.albums = [];
 
-    $http.get('/api/things').success(function(awesomeThings) {
-      $scope.awesomeThings = awesomeThings;
+    var deferred = $http.get('/api/album');
+  /*
+    rx.Observable
+      .fromPromise(deferred)
+      .map(function(response){
+        return response.data[1];
+      })
+      .subscribe(function(album) {
+        $scope.albums.push(album);
+      })
+
+    .success(function(albums) {
+      $scope.albums = albums;
     });
-
-    $scope.addThing = function() {
-      if($scope.newThing === '') {
-        return;
-      }
-      $http.post('/api/things', { name: $scope.newThing });
-      $scope.newThing = '';
-    };
-
-    $scope.deleteThing = function(thing) {
-      $http.delete('/api/things/' + thing._id);
-    };
+    */
   });
