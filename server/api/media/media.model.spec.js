@@ -7,6 +7,13 @@ var Album = require('../album/album.model');
 var albumFoo, albumBar, mediaFoo, mediaBar;
 
 describe('Media Model', function () {
+  beforeEach(function(done) {
+    // Clear media before testing
+    Media.remove().exec().then(function () {
+      done();
+    });
+  });
+
   beforeEach(function (done) {
     albumFoo = new Album({
       name: 'Foo',
@@ -22,8 +29,11 @@ describe('Media Model', function () {
         timestamp: new Date(),
         mediaType: 'image'
       });
+      done();
     });
+  });
 
+  beforeEach(function(done) {
     albumBar = new Album({
       name: 'Bar',
       description: 'Bar',
@@ -38,10 +48,6 @@ describe('Media Model', function () {
         timestamp: new Date(),
         mediaType: 'video'
       });
-    });
-
-    // Clear media before testing
-    Media.remove().exec().then(function () {
       done();
     });
   });
@@ -79,7 +85,7 @@ describe('Media Model', function () {
     });
   });
 
-  it('should fail when saving a duplicate media', function (done) {
+  it('should fail when saving a duplicate media item', function (done) {
     mediaBar.save(function () {
       var mediaDup = new Media(mediaBar);
       mediaDup.save(function (err) {
