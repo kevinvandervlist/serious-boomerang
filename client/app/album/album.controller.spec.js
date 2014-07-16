@@ -44,13 +44,22 @@ describe('Controller: AlbumCtrl', function () {
 
   it('should attach two years with albums to the scope', function () {
     $httpBackend.flush();
-    console.log(scope.albums);
+    expect(scope.albums.length).toBe(2);
+  });
+
+  it('should sort by the year of the album', function() {
+    $httpBackend.flush();
+    expect(scope.albums.length).toBe(2);
+
+    expect(scope.albums[0].key).toBe(2014);
+    expect(scope.albums[1].key).toBe(2010);
+  });
+
+  it('should have 1 album in 2014', function () {
+    $httpBackend.flush();
     expect(scope.albums.length).toBe(2);
 
     expect(scope.albums[0].key).toBe(2014);
     expect(scope.albums[0].albums.length).toBe(1);
-
-    expect(scope.albums[1].key).toBe(2010);
-    expect(scope.albums[1].albums.length).toBe(2);
   });
 });
