@@ -5,15 +5,11 @@
     <div class="col-lg-12">
       <h3 class="page-header">{{ album.name }}</h3>
       <p>{{ album.description }}, van {{ album.startDateStr }} tot {{ album.endDateStr }}</p>
-
-      <ul class="nav nav-tabs nav-stacked col-lg-12" ng-repeat="_set in albums | orderBy:'-key'">
-        <li class="albumyear">{{ _set.key }}</li>
-        <li>
-          <ul class="nav nav-stacked col-lg-4" ng-repeat="album in _set.albums | orderBy:'name'">
-            <li><a href="/album/{{ _set.key }}/{{ album.name }}" tooltip="{{ album.name }}">{{ album.name }}: {{ album.description }}</a></li>
-          </ul>
-        </li>
-      </ul>
+    </div>
+  </div>
+  <div class="row row-centered">
+    <div class="col-xs-6 col-centered image" ng-repeat="image in images | orderBy:'timestamp'">
+      <p>image: {{ image.name }} @ {{ image.timestamp }}</p>
     </div>
   </div>
 </div>

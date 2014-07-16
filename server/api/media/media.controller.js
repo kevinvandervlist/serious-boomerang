@@ -3,11 +3,6 @@
 var Media = require('./media.model');
 var passport = require('passport');
 var config = require('../../config/environment');
-var jwt = require('jsonwebtoken');
-
-var validationError = function (res, err) {
-  return res.json(422, err);
-};
 
 /**
  * Get list of media that's associated with the requested album
@@ -15,8 +10,20 @@ var validationError = function (res, err) {
 exports.index = function (req, res) {
   var albumId = req.params.albumId;
 
-  Media.find({}, function (err, medialist) {
+  Media.find({
+    albumId: albumId
+  }, function (err, medialist) {
     if (err) return res.send(500, err);
     res.json(200, medialist);
   });
+};
+
+/**
+ * Retrieve a single media file.
+ * @param req
+ * @param res
+ */
+exports.singleFile = function(req, res) {
+  var albumId = req.params.albumId;
+  var mediaId = req.params.mediaId;
 };

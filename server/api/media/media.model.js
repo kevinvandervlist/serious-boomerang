@@ -17,6 +17,10 @@ var MediaSchema = new Schema({
     trim: true,
     required: true
   },
+  timestamp: {
+    type: Date,
+    required: true
+  },
   addedOn: {
     type: Date,
     required: true

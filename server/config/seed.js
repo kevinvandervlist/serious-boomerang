@@ -8,6 +8,7 @@
 var Thing = require('../api/thing/thing.model');
 var User = require('../api/user/user.model');
 var Album = require('../api/album/album.model');
+var Media = require('../api/media/media.model');
 
 Thing.find({}).remove(function () {
   Thing.create({
@@ -71,5 +72,60 @@ Album.find({}).remove(function () {
       endDate: new Date(1293683178 * 1000),
       locations: []
     }
-  );
+    , function () {
+      Media.find({}).remove(function () {
+        Album.findOne({name: 'Foo'}, function (err, album) {
+          if (err) {
+            console.error(err);
+            return;
+          }
+          if (album === null) {
+            console.error('Album not found');
+            return;
+          }
+          Media.create({
+            albumId: album._id,
+            name: 'one.jpg',
+            addedOn: new Date(),
+            timestamp: new Date(),
+            mediaType: 'image'
+          }, {
+            albumId: album._id,
+            name: 'two.jpg',
+            addedOn: new Date(),
+            timestamp: new Date(),
+            mediaType: 'image'
+          });
+        });
+      });
+      Album.findOne({name: 'Bar'}, function (err, album) {
+        if (err) {
+          console.error(err);
+          return;
+        }
+        if (album === null) {
+          console.error('Album not found');
+          return;
+        }
+        Media.create({
+          albumId: album._id,
+          name: 'one.jpg',
+          addedOn: new Date(),
+          timestamp: new Date(),
+          mediaType: 'image'
+        }, {
+          albumId: album._id,
+          name: 'two.jpg',
+          addedOn: new Date(),
+          timestamp: new Date(),
+          mediaType: 'image'
+        }, {
+          albumId: album._id,
+          name: 'three.jpg',
+          addedOn: new Date(),
+          timestamp: new Date(),
+          mediaType: 'image'
+        });
+      });
+    });
 });

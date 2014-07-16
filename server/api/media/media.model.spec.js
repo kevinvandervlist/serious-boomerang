@@ -19,6 +19,7 @@ describe('Media Model', function () {
         albumId: albumFoo._id,
         name: 'foo.jpg  ',
         addedOn: new Date(),
+        timestamp: new Date(),
         mediaType: 'image'
       });
     });
@@ -34,6 +35,7 @@ describe('Media Model', function () {
         albumId: albumBar._id,
         name: 'bar.jpg',
         addedOn: new Date(),
+        timestamp: new Date(),
         mediaType: 'video'
       });
     });
