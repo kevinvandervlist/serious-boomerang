@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('seriousBoomerangApp')
-  .controller('AlbumCtrl', function ($scope, $http) {
+  .controller('AlbumListCtrl', function ($scope, $http) {
     var rx = Rx; // jshint ignore:line
     $scope.albums = [];
 

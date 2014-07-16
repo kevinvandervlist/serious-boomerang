@@ -1,10 +1,10 @@
 'use strict';
 
-describe('Controller: AlbumCtrl', function () {
+describe('Controller: AlbumListCtrl', function () {
   // load the controller's module
   beforeEach(module('seriousBoomerangApp'));
 
-  var AlbumCtrl,
+  var AlbumListCtrl,
     scope,
     $httpBackend;
 
@@ -37,7 +37,7 @@ describe('Controller: AlbumCtrl', function () {
       .respond(albums);
 
     scope = $rootScope.$new();
-    AlbumCtrl = $controller('AlbumCtrl', {
+    AlbumListCtrl = $controller('AlbumListCtrl', {
       $scope: scope
     });
   }));

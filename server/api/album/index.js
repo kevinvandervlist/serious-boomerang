@@ -7,7 +7,8 @@ var auth = require('../../auth/auth.service');
 
 var router = express.Router();
 
-router.get('/', auth.isAuthenticated(), controller.index);
+router.get('/', auth.hasPermission(), controller.index);
+router.get('/:year/:name', auth.hasPermission(), controller.albumdetails);
 /*
 router.get('/', auth.hasRole('admin'), controller.index);
 router.delete('/:id', auth.hasRole('admin'), controller.destroy);

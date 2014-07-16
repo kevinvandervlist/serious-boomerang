@@ -36,6 +36,14 @@ function isAuthenticated() {
 }
 
 /**
+ * Attaches the user object to the request if the user has permission to use the given resource.
+ * Otherwise returns 403
+ */
+function hasPermission() {
+  return isAuthenticated();
+}
+
+/**
  * Checks if the user role meets the minimum requirements of the route
  */
 function hasRole(roleRequired) {
@@ -71,6 +79,7 @@ function setTokenCookie(req, res) {
 }
 
 exports.isAuthenticated = isAuthenticated;
+exports.hasPermission = hasPermission;
 exports.hasRole = hasRole;
 exports.signToken = signToken;
 exports.setTokenCookie = setTokenCookie;
