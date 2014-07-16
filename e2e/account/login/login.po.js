@@ -7,12 +7,27 @@ var LoginPage = function() {
 };
 
 LoginPage.prototype.doLogin = function(browser) {
+  browser.get('/login');
+
   this.email.sendKeys('usera@b.c');
   this.password.sendKeys('test');
   this.button.click();
-  // Firefox needs this ugly hack:
-  browser.actions().mouseDown().mouseUp().perform();
 
+  // Firefox needs this ugly hack:
+  // See https://github.com/angular/protractor/issues/480
+  browser.actions().mouseDown().mouseUp().perform();
+};
+
+LoginPage.prototype.doLoginAdmin = function(browser) {
+  browser.get('/login');
+
+  this.email.sendKeys('admin@b.c');
+  this.password.sendKeys('test');
+  this.button.click();
+
+  // Firefox needs this ugly hack:
+  // See https://github.com/angular/protractor/issues/480
+  browser.actions().mouseDown().mouseUp().perform();
 };
 
 module.exports = new LoginPage();

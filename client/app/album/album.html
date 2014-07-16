@@ -4,8 +4,8 @@
   <div class="row">
     <div class="col-lg-12">
       <h1 class="page-header">Albums:</h1>
-      <ul class="nav nav-tabs nav-stacked col-lg-12" ng-repeat="_set in albums | orderBy:'key'">
-        <li>{{ _set.key }}</li>
+      <ul class="nav nav-tabs nav-stacked col-lg-12" ng-repeat="_set in albums | orderBy:'-key'">
+        <li class="albumyear">{{ _set.key }}</li>
         <li>
           <ul class="nav nav-stacked col-lg-4" ng-repeat="album in _set.albums | orderBy:'name'">
             <li><a href="#" tooltip="{{ album.name }}">{{ album.name }}: {{ album.description }}</a></li>

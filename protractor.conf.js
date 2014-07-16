@@ -19,6 +19,7 @@ exports.config = {
 
   // list of files / patterns to load in the browser
   specs: [
+    'e2e/account/login/login.spec.js',
     'e2e/**/*.spec.js'
   ],
 

@@ -4,9 +4,9 @@ describe('Album View', function() {
   var page;
 
   beforeEach(function() {
-    browser.get('/login');
-    var login = require('../auth/login.po');
-    login.doLogin(browser);
+    //var login = require('../account/login/login.po');
+    //login.doLogin(browser);
+
     browser.get('/album');
     page = require('./album.po');
   });
@@ -15,21 +15,15 @@ describe('Album View', function() {
     expect(page.albumCount).toBe(2);
   });
 
-  it('should have 2010 as the first album', function() {
-    console.log(this.albums_2014);
-    expect(this.albums_2014.getText()).toBe('2010');
+  it('should have 2014 as the first album', function() {
+    element.all(by.css('.albumyear')).then(function(items) {
+      expect(items[0].getText()).toBe('2014');
+    });
   });
 
-  it('should include jumbotron with correct data', function() {
-    expect(page.h1El.getText()).toBe('\'Allo, \'Allo!');
-    expect(page.imgEl.getAttribute('src')).toMatch(/assets\/images\/yeoman.png$/);
-    expect(page.imgEl.getAttribute('alt')).toBe('I\'m Yeoman');
-  });
-
-  it('should render awesomeThings', function() {
-    expect(page.firstAwesomeThingNameEl.getText()).toContain('Development Tools');
-    page.awesomeThingsCount.then(function(count) {
-      expect(count).toBe(6);
+  it('should have 2010 as the second album', function() {
+    element.all(by.css('.albumyear')).then(function(items) {
+      expect(items[1].getText()).toBe('2010');
     });
   });
 });
