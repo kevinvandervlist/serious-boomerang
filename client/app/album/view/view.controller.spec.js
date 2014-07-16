@@ -43,5 +43,5 @@ describe('Controller: AlbumViewCtrl', function () {
     $httpBackend.flush();
     expect(scope.album.startDateStr).toBe('4-11-2010');
     expect(scope.album.endDateStr).toBe('4-11-2010');
-  })
+  });
 });

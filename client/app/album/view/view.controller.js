@@ -1,5 +1,10 @@
 'use strict';
 
+function humanReadableDate(date) {
+  var d = new Date(date);
+  return d.getDay() + '-' + d.getMonth() + '-' + d.getFullYear();
+}
+
 angular.module('seriousBoomerangApp')
   .controller('AlbumViewCtrl', function ($scope, $stateParams, $http) {
     var rx = Rx; // jshint ignore:line
@@ -18,8 +23,3 @@ angular.module('seriousBoomerangApp')
         $scope.album = album;
       });
   });
-
-function humanReadableDate(date) {
-  var d = new Date(date);
-  return d.getDay() + '-' + d.getMonth() + '-' + d.getFullYear();
-}
