@@ -54,10 +54,10 @@ describe('Media controller', function () {
   });
 
   it('should not have any associated media at the start', function (done) {
-    ExpressControllerTester.request(controller.index, done)
-      .params({albumId: albumFoo._id})
-      .response('json')
-      .expect(function(code, result) {
+    ExpressControllerTester.doRequest(controller.index, done)
+      .withParams({albumId: albumFoo._id})
+      .asResponse('json')
+      .withValidation(function(code, result) {
         code.should.be.exactly(200);
         result.should.have.length(0);
       });
@@ -65,10 +65,10 @@ describe('Media controller', function () {
 
   it('should provide a listing of an album when provided with a valid id', function (done) {
     mediaFoo.save(function() {
-      ExpressControllerTester.request(controller.index, done)
-        .params({albumId: albumFoo._id})
-        .response('json')
-        .expect(function(code, result) {
+      ExpressControllerTester.doRequest(controller.index, done)
+        .withParams({albumId: albumFoo._id})
+        .asResponse('json')
+        .withValidation(function(code, result) {
           code.should.be.exactly(200);
           result.should.have.length(1);
         });
@@ -76,23 +76,23 @@ describe('Media controller', function () {
   });
 
   it('should return an empty array when an album does not exist', function(done) {
-    ExpressControllerTester.request(controller.index, done)
-      .params({albumId: 'abc'})
-      .response('json')
-      .expect(function(code, result) {
+    ExpressControllerTester.doRequest(controller.index, done)
+      .withParams({albumId: 'abc'})
+      .asResponse('json')
+      .withValidation(function(code, result) {
         code.should.be.exactly(200);
         result.should.have.length(0);
       });
   });
 
   it('should not describe a non existing file', function(done) {
-    ExpressControllerTester.request(controller.describeSingleFile, done)
-      .params({
+    ExpressControllerTester.doRequest(controller.describeSingleFile, done)
+      .withParams({
         albumId: albumFoo._id,
         mediaId: albumFoo._id
       })
-      .response('json')
-      .expect(function(code, result) {
+      .asResponse('json')
+      .withValidation(function(code, result) {
         code.should.be.exactly(200);
         should.not.exist(result);
       });
@@ -100,13 +100,13 @@ describe('Media controller', function () {
 
   it('should describe an existing file', function (done) {
     mediaFoo.save(function() {
-      ExpressControllerTester.request(controller.describeSingleFile, done)
-        .params({
+      ExpressControllerTester.doRequest(controller.describeSingleFile, done)
+        .withParams({
           albumId: albumFoo._id,
           mediaId: mediaFoo._id
         })
-        .response('json')
-        .expect(function(code, result) {
+        .asResponse('json')
+        .withValidation(function(code, result) {
           should.exist(result);
           code.should.be.exactly(200);
           result.should.be.an.Object;

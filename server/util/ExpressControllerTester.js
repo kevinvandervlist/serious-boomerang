@@ -21,12 +21,12 @@ var ExpressControllerTester = function (_testFunc, _doneFunc) {
   this.deferredResult = Q.defer();
 };
 
-ExpressControllerTester.prototype.params = function(params) {
+ExpressControllerTester.prototype.withParams = function(params) {
   this.req.params = params;
   return this;
 };
 
-ExpressControllerTester.prototype.response = function(expectedFunc) {
+ExpressControllerTester.prototype.asResponse = function(expectedFunc) {
   this.res[expectedFunc] = function(status, body) {
     this.deferredResult.resolve({
       status: status,
@@ -41,7 +41,7 @@ ExpressControllerTester.prototype.response = function(expectedFunc) {
  * The validator accepts 2 params: status code and body (which can be an error)
  * @param validator
  */
-ExpressControllerTester.prototype.expect = function(validator) {
+ExpressControllerTester.prototype.withValidation = function(validator) {
   this.testFunc(this.req, this.res);
   this.deferredResult.promise.then(function(result) {
     try {
@@ -54,6 +54,6 @@ ExpressControllerTester.prototype.expect = function(validator) {
   }.bind(this));
 };
 
-exports.request = function(testfunc, doneFunc) {
+exports.doRequest = function(testfunc, doneFunc) {
   return new ExpressControllerTester(testfunc, doneFunc);
 };
