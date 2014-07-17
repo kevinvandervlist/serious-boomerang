@@ -9,6 +9,6 @@ var router = express.Router();
 
 router.get('/:albumId', auth.hasPermission(), controller.index);
 router.get('/:albumId/:mediaId/describe', auth.hasPermission(), controller.describeSingleFile);
-router.get('/:albumId/:mediaId/retrieve', auth.hasPermission(), controller.getSingleFile);
+router.get('/:albumId/:mediaId/retrieve', controller.getSingleFile);
 
 module.exports = router;

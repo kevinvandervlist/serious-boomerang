@@ -36,25 +36,15 @@ function getMediaDetails(rx, mediaDetailsPromise) {
     .flatMap(rx.Observable.fromArray);
 }
 
-function getMediaFiles(rx, $http, mediaObservable, imageFilesObserverPromise, size) {
-  mediaObservable
-    .subscribe(function (media) {
+function getMediaLinksObservable(mediaObservable, size) {
+  return mediaObservable
+    .map(function(media) {
       var url = '/api/media/' + media.albumId + '/' + media._id + '/retrieve';
       if(size) {
         url += size;
       }
-      rx.Observable
-        .fromPromise($http.get(url))
-        .map(function(response) {
-          return response.data;
-        })
-        .subscribe(function (image) {
-          imageFilesObserverPromise.then(function(observer) {
-            console.log('onNext image');
-            console.log(image);
-            observer.onNext(image);
-          });
-        });
+      media.url = url;
+      return media;
     });
 }
 
@@ -63,11 +53,8 @@ angular.module('seriousBoomerangApp')
     var rx = Rx; // jshint ignore:line
     $scope.album = null;
     $scope.images = [];
+    $scope.imageSize = undefined;
 
-    var deferredImageFilesObserver = $q.defer();
-    var imageFilesObservable = rx.Observable.create(function (observer) {
-      deferredImageFilesObserver.resolve(observer);
-    });
 
     var albumDetails = $http.get('/api/album/' + $stateParams.year + '/' + $stateParams.name);
     var deferredMediaDetails = $q.defer();
@@ -79,14 +66,8 @@ angular.module('seriousBoomerangApp')
       $scope.album = album;
     });
 
-    mediaObservable.subscribe(function (media) {
-      $scope.images.push(media);
-    });
-
-    getMediaFiles(rx, $http, mediaObservable, deferredImageFilesObserver.promise);
-
-    imageFilesObservable
-      .subscribe(function (image) {
-        console.log(image);
+    getMediaLinksObservable(mediaObservable, $scope.imageSize)
+      .subscribe(function (media) {
+        $scope.images.push(media);
       });
   });

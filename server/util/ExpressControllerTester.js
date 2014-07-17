@@ -27,8 +27,8 @@ ExpressControllerTester.prototype.withParams = function(params) {
 };
 
 ExpressControllerTester.prototype.asResponse = function(expectedFunc) {
-  if (expectedFunc === 'sendFile') {
-    this.res['sendFile'] = function (body, cb) {
+  if (expectedFunc === 'sendfile') {
+    this.res.sendfile = function (body, cb) {
       this.deferredResult.resolve({
         status: cb,
         body: body

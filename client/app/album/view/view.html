@@ -4,12 +4,12 @@
   <div class="row">
     <div class="col-lg-12">
       <h3 class="page-header">{{ album.name }}</h3>
-      <p>{{ album.description }}, van {{ album.startDateStr }} tot {{ album.endDateStr }}</p>
+      <p>{{ album.description }}, van {{ album.startDateStr }} tot {{ album.endDateStr }}. Er zijn {{ images.length }} bestanden in dit album.</p>
     </div>
   </div>
   <div class="row row-centered">
-    <div class="col-xs-6 col-centered image" ng-repeat="image in images | orderBy:'timestamp'">
-      <p>image: {{ image.name }} @ {{ image.timestamp }}</p>
+    <div class="col-xs-6 col-centered image-data" ng-repeat="image in images | orderBy:'timestamp'">
+      <img class="image" src="{{ image.url }}" alt="{{ image.name }}">
     </div>
   </div>
 </div>

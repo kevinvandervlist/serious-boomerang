@@ -51,15 +51,6 @@ describe('Controller: AlbumViewCtrl', function () {
     $httpBackend.expectGET('/api/media/53c6c1de37d5307816c6a3ff')
       .respond(images);
 
-    $httpBackend.expectGET('/api/media/53c6c1de37d5307816c6a3ff/53c6c1de37d5307816c6a300/retrieve')
-      .respond([]);
-
-    $httpBackend.expectGET('/api/media/53c6c1de37d5307816c6a3ff/53c6c1de37d5307816c6a301/retrieve')
-      .respond([]);
-
-    $httpBackend.expectGET('/api/media/53c6c1de37d5307816c6a3ff/53c6c1de37d5307816c6a302/retrieve')
-      .respond([]);
-
     scope = $rootScope.$new();
     AlbumViewCtrl = $controller('AlbumViewCtrl', {
       $scope: scope,
