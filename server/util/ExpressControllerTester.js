@@ -27,12 +27,21 @@ ExpressControllerTester.prototype.withParams = function(params) {
 };
 
 ExpressControllerTester.prototype.asResponse = function(expectedFunc) {
-  this.res[expectedFunc] = function(status, body) {
-    this.deferredResult.resolve({
-      status: status,
-      body: body
-    });
-  }.bind(this);
+  if (expectedFunc === 'sendFile') {
+    this.res['sendFile'] = function (body, cb) {
+      this.deferredResult.resolve({
+        status: cb,
+        body: body
+      });
+    }.bind(this);
+  } else {
+    this.res[expectedFunc] = function (status, body) {
+      this.deferredResult.resolve({
+        status: status,
+        body: body
+      });
+    }.bind(this);
+  }
   return this;
 };
 
@@ -45,7 +54,7 @@ ExpressControllerTester.prototype.withValidation = function(validator) {
   this.testFunc(this.req, this.res);
   this.deferredResult.promise.then(function(result) {
     try {
-      validator(result.status, result.body);
+      validator(result.body, result.status);
     } catch(err) {
       this.doneFunc(err);
       return;

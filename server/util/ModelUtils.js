@@ -3,7 +3,6 @@
 var Q = require('q');
 
 exports.waitForCompletion = function() {
-  console.log(arguments);
   return Q.all(arguments);
 };
 

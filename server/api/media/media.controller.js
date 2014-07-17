@@ -25,15 +25,11 @@ exports.index = function (req, res) {
  * @param res
  */
 exports.describeSingleFile = function (req, res) {
-  var albumId = req.params.albumId;
-  var mediaId = req.params.mediaId;
-
-  Media.findOne({
-    _id: mediaId,
-    albumId: albumId
-  }, function (err, mediaDescription) {
-    if (err) return res.send(500, err);
-    res.json(200, mediaDescription);
+  modelUtils.getAsPromiseOne(Media, {
+    _id: req.params.mediaId,
+    albumId: req.params.albumId
+  }).then(function(value) {
+    res.json(200, value);
   });
 };
 
@@ -43,32 +39,28 @@ exports.describeSingleFile = function (req, res) {
  * @param res
  */
 exports.getSingleFile = function (req, res) {
-  var albumId = req.params.albumId;
-  var mediaId = req.params.mediaId;
-  var album = null;
-  var media = null;
-
   var albumPromise = modelUtils
-    .getAsPromiseOne(Album, {_id: albumId})
-    .then(function (_album) {
-      album = _album;
+    .getAsPromiseOne(Album, {
+      _id: req.params.albumId
     });
 
   var mediaPromise = modelUtils
     .getAsPromiseOne(Media, {
-      _id: mediaId,
-      albumId: albumId
-    }).then(function (_media) {
-      media = _media;
+      _id: req.params.mediaId,
+      albumId: req.params.albumId
     });
 
   modelUtils
     .waitForCompletion(albumPromise, mediaPromise)
-    .then(function () {
-      if (err) return res.send(500, err);
+    .then(function (result) {
+      var album = result[0];
+      var media = result[1];
+
       var year = new Date(album.startDate).getFullYear();
       var fileName = media.name;
       var path = config.mediaDirectory + '/media/' + year + '/' + album.name + '/' + fileName;
-      res.sendFile(path);
+      res.sendFile(path, function(err) {
+        if (err) return res.send(500, err);
+      });
     });
 };

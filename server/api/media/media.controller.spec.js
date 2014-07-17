@@ -4,6 +4,7 @@ var should = require('should');
 var Media = require('./media.model');
 var Album = require('../album/album.model');
 var controller = require('./media.controller');
+var config = require('../../config/environment');
 var ExpressControllerTester = require('../../util/ExpressControllerTester');
 
 var albumFoo, albumBar, mediaFoo, mediaBar;
@@ -57,7 +58,7 @@ describe('Media controller', function () {
     ExpressControllerTester.doRequest(controller.index, done)
       .withParams({albumId: albumFoo._id})
       .asResponse('json')
-      .withValidation(function(code, result) {
+      .withValidation(function(result, code) {
         code.should.be.exactly(200);
         result.should.have.length(0);
       });
@@ -68,7 +69,7 @@ describe('Media controller', function () {
       ExpressControllerTester.doRequest(controller.index, done)
         .withParams({albumId: albumFoo._id})
         .asResponse('json')
-        .withValidation(function(code, result) {
+        .withValidation(function(result, code) {
           code.should.be.exactly(200);
           result.should.have.length(1);
         });
@@ -79,7 +80,7 @@ describe('Media controller', function () {
     ExpressControllerTester.doRequest(controller.index, done)
       .withParams({albumId: 'abc'})
       .asResponse('json')
-      .withValidation(function(code, result) {
+      .withValidation(function(result, code) {
         code.should.be.exactly(200);
         result.should.have.length(0);
       });
@@ -92,7 +93,7 @@ describe('Media controller', function () {
         mediaId: albumFoo._id
       })
       .asResponse('json')
-      .withValidation(function(code, result) {
+      .withValidation(function(result, code) {
         code.should.be.exactly(200);
         should.not.exist(result);
       });
@@ -106,13 +107,27 @@ describe('Media controller', function () {
           mediaId: mediaFoo._id
         })
         .asResponse('json')
-        .withValidation(function(code, result) {
+        .withValidation(function(result, code) {
           should.exist(result);
           code.should.be.exactly(200);
           result.should.be.an.Object;
           result._id.should.eql(mediaFoo._id);
           result.albumId.should.eql(albumFoo._id.toString());
           result.name.should.equal('foo.jpg');
+        });
+    });
+  });
+
+  it('should be able to retrieve an existing file', function(done) {
+    mediaFoo.save(function() {
+      ExpressControllerTester.doRequest(controller.getSingleFile, done)
+        .withParams({
+          albumId: albumFoo._id,
+          mediaId: mediaFoo._id
+        })
+        .asResponse('sendFile')
+        .withValidation(function (result) {
+          result.should.equal(config.mediaDirectory + '/media/2014/Foo/foo.jpg');
         });
     });
   });
