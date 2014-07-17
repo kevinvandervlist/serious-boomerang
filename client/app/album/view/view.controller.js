@@ -50,6 +50,8 @@ function getMediaFiles(rx, $http, mediaObservable, imageFilesObserverPromise, si
         })
         .subscribe(function (image) {
           imageFilesObserverPromise.then(function(observer) {
+            console.log('onNext image');
+            console.log(image);
             observer.onNext(image);
           });
         });

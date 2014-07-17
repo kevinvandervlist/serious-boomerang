@@ -59,8 +59,8 @@ exports.getSingleFile = function (req, res) {
       var year = new Date(album.startDate).getFullYear();
       var fileName = media.name;
       var path = config.mediaDirectory + '/media/' + year + '/' + album.name + '/' + fileName;
-      res.sendFile(path, function(err) {
-        if (err) return res.send(500, err);
+      res.sendfile(path, function(err) {
+        if (err) next(err);
       });
     });
 };

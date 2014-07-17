@@ -125,7 +125,7 @@ describe('Media controller', function () {
           albumId: albumFoo._id,
           mediaId: mediaFoo._id
         })
-        .asResponse('sendFile')
+        .asResponse('sendfile')
         .withValidation(function (result) {
           result.should.equal(config.mediaDirectory + '/media/2014/Foo/foo.jpg');
         });
