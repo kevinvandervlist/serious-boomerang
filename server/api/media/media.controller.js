@@ -1,15 +1,16 @@
 'use strict';
 
+var Album = require('../album/album.model');
 var Media = require('./media.model');
 var passport = require('passport');
 var config = require('../../config/environment');
+var modelUtils = require('../../util/ModelUtils');
 
 /**
  * Get list of media that's associated with the requested album
  */
 exports.index = function (req, res) {
   var albumId = req.params.albumId;
-
   Media.find({
     albumId: albumId
   }, function (err, medialist) {
@@ -19,11 +20,55 @@ exports.index = function (req, res) {
 };
 
 /**
+ * Describe a single file
+ * @param req
+ * @param res
+ */
+exports.describeSingleFile = function (req, res) {
+  var albumId = req.params.albumId;
+  var mediaId = req.params.mediaId;
+
+  Media.findOne({
+    _id: mediaId,
+    albumId: albumId
+  }, function (err, mediaDescription) {
+    if (err) return res.send(500, err);
+    res.json(200, mediaDescription);
+  });
+};
+
+/**
  * Retrieve a single media file.
  * @param req
  * @param res
  */
-exports.singleFile = function(req, res) {
+exports.getSingleFile = function (req, res) {
   var albumId = req.params.albumId;
   var mediaId = req.params.mediaId;
+  var album = null;
+  var media = null;
+
+  var albumPromise = modelUtils
+    .getAsPromiseOne(Album, {_id: albumId})
+    .then(function (_album) {
+      album = _album;
+    });
+
+  var mediaPromise = modelUtils
+    .getAsPromiseOne(Media, {
+      _id: mediaId,
+      albumId: albumId
+    }).then(function (_media) {
+      media = _media;
+    });
+
+  modelUtils
+    .waitForCompletion(albumPromise, mediaPromise)
+    .then(function () {
+      if (err) return res.send(500, err);
+      var year = new Date(album.startDate).getFullYear();
+      var fileName = media.name;
+      var path = config.mediaDirectory + '/media/' + year + '/' + album.name + '/' + fileName;
+      res.sendFile(path);
+    });
 };

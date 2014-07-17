@@ -71,8 +71,7 @@ Album.find({}).remove(function () {
       startDate: new Date(1293682178 * 1000),
       endDate: new Date(1293683178 * 1000),
       locations: []
-    }
-    , function () {
+    }, function () {
       Media.find({}).remove(function () {
         Album.findOne({name: 'Foo'}, function (err, album) {
           if (err) {

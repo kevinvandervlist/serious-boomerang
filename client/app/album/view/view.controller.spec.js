@@ -19,18 +19,21 @@ describe('Controller: AlbumViewCtrl', function () {
 
   var images = [
     {
+      _id: '53c6c1de37d5307816c6a300',
       albumId: '53c6c1de37d5307816c6a3ff',
       name: 'one.jpg',
       addedOn: new Date(),
       timestamp: new Date(),
       mediaType: 'image'
     }, {
+      _id: '53c6c1de37d5307816c6a301',
       albumId: '53c6c1de37d5307816c6a3ff',
       name: 'two.jpg',
       addedOn: new Date(),
       timestamp: new Date(),
       mediaType: 'image'
     }, {
+      _id: '53c6c1de37d5307816c6a302',
       albumId: '53c6c1de37d5307816c6a3ff',
       name: 'three.jpg',
       addedOn: new Date(),
@@ -48,6 +51,15 @@ describe('Controller: AlbumViewCtrl', function () {
     $httpBackend.expectGET('/api/media/53c6c1de37d5307816c6a3ff')
       .respond(images);
 
+    $httpBackend.expectGET('/api/media/53c6c1de37d5307816c6a3ff/53c6c1de37d5307816c6a300/retrieve')
+      .respond([]);
+
+    $httpBackend.expectGET('/api/media/53c6c1de37d5307816c6a3ff/53c6c1de37d5307816c6a301/retrieve')
+      .respond([]);
+
+    $httpBackend.expectGET('/api/media/53c6c1de37d5307816c6a3ff/53c6c1de37d5307816c6a302/retrieve')
+      .respond([]);
+
     scope = $rootScope.$new();
     AlbumViewCtrl = $controller('AlbumViewCtrl', {
       $scope: scope,
@@ -63,10 +75,12 @@ describe('Controller: AlbumViewCtrl', function () {
     expect(scope.album.name).toBe(album.name);
     expect(scope.album.description).toBe(album.description);
     expect(scope.album.locations.length).toBe(0);
+    $httpBackend.verifyNoOutstandingRequest();
   });
 
   it('should have received 3 images', function () {
     $httpBackend.flush();
     expect(scope.images.length).toBe(3);
+    $httpBackend.verifyNoOutstandingRequest();
   });
 });

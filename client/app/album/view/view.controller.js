@@ -10,12 +10,12 @@ function getAlbumDetails(rx, $q, $http, albumDetailsPromise, deferredMediaDetail
 
   rx.Observable
     .fromPromise(albumDetailsPromise)
-    .map(function(response){
+    .map(function (response) {
       return response.data;
     })
-    .subscribe(function(album) {
+    .subscribe(function (album) {
       $http.get('/api/media/' + album._id).
-        then(function(result) {
+        then(function (result) {
           deferredMediaDetails.resolve(result);
         });
 
@@ -30,10 +30,30 @@ function getAlbumDetails(rx, $q, $http, albumDetailsPromise, deferredMediaDetail
 function getMediaDetails(rx, mediaDetailsPromise) {
   return rx.Observable
     .fromPromise(mediaDetailsPromise)
-    .map(function(response) {
+    .map(function (response) {
       return response.data;
     })
     .flatMap(rx.Observable.fromArray);
+}
+
+function getMediaFiles(rx, $http, mediaObservable, imageFilesObserverPromise, size) {
+  mediaObservable
+    .subscribe(function (media) {
+      var url = '/api/media/' + media.albumId + '/' + media._id + '/retrieve';
+      if(size) {
+        url += size;
+      }
+      rx.Observable
+        .fromPromise($http.get(url))
+        .map(function(response) {
+          return response.data;
+        })
+        .subscribe(function (image) {
+          imageFilesObserverPromise.then(function(observer) {
+            observer.onNext(image);
+          });
+        });
+    });
 }
 
 angular.module('seriousBoomerangApp')
@@ -42,17 +62,29 @@ angular.module('seriousBoomerangApp')
     $scope.album = null;
     $scope.images = [];
 
+    var deferredImageFilesObserver = $q.defer();
+    var imageFilesObservable = rx.Observable.create(function (observer) {
+      deferredImageFilesObserver.resolve(observer);
+    });
+
     var albumDetails = $http.get('/api/album/' + $stateParams.year + '/' + $stateParams.name);
     var deferredMediaDetails = $q.defer();
 
     var albumPromise = getAlbumDetails(rx, $q, $http, albumDetails, deferredMediaDetails);
     var mediaObservable = getMediaDetails(rx, deferredMediaDetails.promise);
 
-    albumPromise.then(function(album) {
+    albumPromise.then(function (album) {
       $scope.album = album;
     });
 
-    mediaObservable.subscribe(function(media) {
+    mediaObservable.subscribe(function (media) {
       $scope.images.push(media);
     });
+
+    getMediaFiles(rx, $http, mediaObservable, deferredImageFilesObserver.promise);
+
+    imageFilesObservable
+      .subscribe(function (image) {
+        console.log(image);
+      });
   });
