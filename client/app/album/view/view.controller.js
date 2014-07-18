@@ -36,10 +36,10 @@ function getMediaDetails(rx, mediaDetailsPromise) {
     .flatMap(rx.Observable.fromArray);
 }
 
-function getMediaLinksObservable(mediaObservable, size) {
+function getMediaLinksObservable(mediaObservable, size, token) {
   return mediaObservable
     .map(function(media) {
-      var url = '/api/media/' + media.albumId + '/' + media._id + '/retrieve';
+      var url = '/api/media/' + media.albumId + '/' + media._id + '/retrieve/' + token;
       if(size) {
         url += size;
       }
@@ -49,12 +49,13 @@ function getMediaLinksObservable(mediaObservable, size) {
 }
 
 angular.module('seriousBoomerangApp')
-  .controller('AlbumViewCtrl', function ($scope, $stateParams, $http, $q) {
+  .controller('AlbumViewCtrl', function ($scope, $stateParams, $http, $q, authInterceptor) {
     var rx = Rx; // jshint ignore:line
+    var token = authInterceptor.token();
+
     $scope.album = null;
     $scope.images = [];
     $scope.imageSize = undefined;
-
 
     var albumDetails = $http.get('/api/album/' + $stateParams.year + '/' + $stateParams.name);
     var deferredMediaDetails = $q.defer();
@@ -66,7 +67,7 @@ angular.module('seriousBoomerangApp')
       $scope.album = album;
     });
 
-    getMediaLinksObservable(mediaObservable, $scope.imageSize)
+    getMediaLinksObservable(mediaObservable, $scope.imageSize, token)
       .subscribe(function (media) {
         $scope.images.push(media);
       });
