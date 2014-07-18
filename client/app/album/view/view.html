@@ -4,12 +4,21 @@
   <div class="row">
     <div class="col-lg-12">
       <h3 class="page-header">{{ album.name }}</h3>
-      <p>{{ album.description }}, van {{ album.startDateStr }} tot {{ album.endDateStr }}. Er zijn {{ images.length }} bestanden in dit album.</p>
+      <p>{{ album.description }}, van {{ album.startDateStr }} tot {{ album.endDateStr }}. Er zijn {{ images.length }}
+        bestanden in dit album.</p>
     </div>
   </div>
-  <div class="row row-centered">
-    <div class="col-xs-4 col-centered image-data" ng-repeat="image in images | orderBy:'timestamp'">
-      <img class="image" src="{{ image.url }}" alt="{{ image.name }}">
+  <!-- Single image -->
+  <div ng-show="selectedImage" class="row">
+    <img class="showcase center-block" ng-src="{{ selectedImage.url }} {{ largeSize }}" alt="{{ selectedImage.name }}">
+    <button ng-show="hasImageAtPosition(prevImageID)" ng-click="setImage(prevImageID)">Prev</button>
+    <button ng-click="setImage(undefined)">Overzicht</button>
+    <button ng-show="hasImageAtPosition(nextImageID)" ng-click="setImage(nextImageID)">Next</button>
+  </div>
+  <!-- Overview -->
+  <div ng-hide="selectedImage" class="row row-centered">
+    <div class="col-xs-4 col-centered image-data" ng-repeat="image in images">
+      <img class="image" ng-src="{{ image.url }}{{ thumbSize }}" alt="{{ image.name }}" ng-click="setImage($index)">
     </div>
   </div>
 </div>

@@ -36,14 +36,10 @@ function getMediaDetails(rx, mediaDetailsPromise) {
     .flatMap(rx.Observable.fromArray);
 }
 
-function getMediaLinksObservable(mediaObservable, size, token) {
+function getMediaLinksObservable(mediaObservable, token) {
   return mediaObservable
     .map(function(media) {
-      var url = '/api/media/' + media.albumId + '/' + media._id + '/retrieve/' + token;
-      if(size) {
-        url += '/' + size;
-      }
-      media.url = url;
+      media.url = '/api/media/' + media.albumId + '/' + media._id + '/retrieve/' + token + '/';
       return media;
     });
 }
@@ -52,10 +48,26 @@ angular.module('seriousBoomerangApp')
   .controller('AlbumViewCtrl', function ($scope, $stateParams, $http, $q, authInterceptor) {
     var rx = Rx; // jshint ignore:line
     var token = authInterceptor.token();
+    var numberOfImages = -1;
 
     $scope.album = null;
     $scope.images = [];
-    $scope.imageSize = '345';
+    $scope.thumbSize = '345';
+    $scope.largeSize = '960';
+
+    $scope.selectedImage = undefined;
+    $scope.prevImageID = undefined;
+    $scope.nextImageID = undefined;
+
+    $scope.hasImageAtPosition = function(id) {
+      return (0 <= id) && (id < numberOfImages);
+    };
+
+    $scope.setImage = function(id) {
+      $scope.selectedImage = $scope.images[id];
+      $scope.prevImageID = id - 1;
+      $scope.nextImageID = id + 1;
+    };
 
     var albumDetails = $http.get('/api/album/' + $stateParams.year + '/' + $stateParams.name);
     var deferredMediaDetails = $q.defer();
@@ -67,8 +79,14 @@ angular.module('seriousBoomerangApp')
       $scope.album = album;
     });
 
-    getMediaLinksObservable(mediaObservable, $scope.imageSize, token)
+    getMediaLinksObservable(mediaObservable, token)
       .subscribe(function (media) {
         $scope.images.push(media);
+      }, function(err) {}, function() {
+        numberOfImages = $scope.images.length;
+        // Now we received all images we can sort the images array.
+        $scope.images.sort(function(a, b) {
+          return new Date(a.timestamp) - new Date(b.timestamp);
+        });
       });
   });

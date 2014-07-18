@@ -3,3 +3,8 @@
   padding: 1%;
   padding-bottom: 10%;
 }
+
+.showcase {
+  max-width: 98%;
+  max-height: 98%;
+}
