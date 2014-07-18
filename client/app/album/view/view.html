@@ -8,7 +8,7 @@
     </div>
   </div>
   <div class="row row-centered">
-    <div class="col-xs-6 col-centered image-data" ng-repeat="image in images | orderBy:'timestamp'">
+    <div class="col-xs-4 col-centered image-data" ng-repeat="image in images | orderBy:'timestamp'">
       <img class="image" src="{{ image.url }}" alt="{{ image.name }}">
     </div>
   </div>

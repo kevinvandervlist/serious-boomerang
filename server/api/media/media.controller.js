@@ -5,6 +5,7 @@ var Media = require('./media.model');
 var passport = require('passport');
 var config = require('../../config/environment');
 var modelUtils = require('../../util/ModelUtils');
+var ImageCache = require('./image.cache');
 
 /**
  * Get list of media that's associated with the requested album
@@ -58,9 +59,14 @@ exports.getSingleFile = function (req, res) {
 
       var year = new Date(album.startDate).getFullYear();
       var fileName = media.name;
-      var path = config.mediaDirectory + '/media/' + year + '/' + album.name + '/' + fileName;
-      res.sendfile(path, function(err) {
-        if (err) next(err);
+      var pathPromise = ImageCache.fromCacheOrGenerate(year, album.name, fileName, req.params.size);
+
+      pathPromise.then(function(path) {
+        res.sendfile(path, function(err) {
+          if (err) next(err);
+        });
+      }, function(error) {
+        res.send(500, error);
       });
     });
 };

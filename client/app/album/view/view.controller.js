@@ -41,7 +41,7 @@ function getMediaLinksObservable(mediaObservable, size, token) {
     .map(function(media) {
       var url = '/api/media/' + media.albumId + '/' + media._id + '/retrieve/' + token;
       if(size) {
-        url += size;
+        url += '/' + size;
       }
       media.url = url;
       return media;
@@ -55,7 +55,7 @@ angular.module('seriousBoomerangApp')
 
     $scope.album = null;
     $scope.images = [];
-    $scope.imageSize = undefined;
+    $scope.imageSize = '345';
 
     var albumDetails = $http.get('/api/album/' + $stateParams.year + '/' + $stateParams.name);
     var deferredMediaDetails = $q.defer();
