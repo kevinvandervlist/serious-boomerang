@@ -82,7 +82,7 @@ angular.module('seriousBoomerangApp')
     getMediaLinksObservable(mediaObservable, token)
       .subscribe(function (media) {
         $scope.images.push(media);
-      }, function(err) {}, function() {
+      }, function() {}, function() {
         numberOfImages = $scope.images.length;
         // Now we received all images we can sort the images array.
         $scope.images.sort(function(a, b) {

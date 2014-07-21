@@ -74,4 +74,43 @@ describe('Controller: AlbumViewCtrl', function () {
     expect(scope.images.length).toBe(3);
     $httpBackend.verifyNoOutstandingRequest();
   });
+
+  it('should not be able to navigate back on the first image.', function () {
+    $httpBackend.flush();
+    scope.setImage(0);
+    expect(scope.selectedImage).toEqual(scope.images[0]);
+
+    expect(scope.prevImageID).toBe(-1);
+    expect(scope.hasImageAtPosition(scope.prevImageID)).toBe(false);
+
+    expect(scope.nextImageID).toBe(1);
+    expect(scope.hasImageAtPosition(scope.nextImageID)).toBe(true);
+    $httpBackend.verifyNoOutstandingRequest();
+  });
+
+  it('should be able to navigate back and forth on the second image.', function () {
+    $httpBackend.flush();
+    scope.setImage(1);
+    expect(scope.selectedImage).toEqual(scope.images[1]);
+
+    expect(scope.prevImageID).toBe(0);
+    expect(scope.hasImageAtPosition(scope.prevImageID)).toBe(true);
+
+    expect(scope.nextImageID).toBe(2);
+    expect(scope.hasImageAtPosition(scope.nextImageID)).toBe(true);
+    $httpBackend.verifyNoOutstandingRequest();
+  });
+
+  it('should not be able to navigate forward on the third image.', function () {
+    $httpBackend.flush();
+    scope.setImage(2);
+    expect(scope.selectedImage).toEqual(scope.images[2]);
+
+    expect(scope.prevImageID).toBe(1);
+    expect(scope.hasImageAtPosition(scope.prevImageID)).toBe(true);
+
+    expect(scope.nextImageID).toBe(3);
+    expect(scope.hasImageAtPosition(scope.nextImageID)).toBe(false);
+    $httpBackend.verifyNoOutstandingRequest();
+  });
 });

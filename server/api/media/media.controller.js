@@ -40,6 +40,10 @@ exports.describeSingleFile = function (req, res) {
  * @param res
  */
 exports.getSingleFile = function (req, res) {
+  var fail = function(err) {
+    res.send(500, err);
+  };
+
   var albumPromise = modelUtils
     .getAsPromiseOne(Album, {
       _id: req.params.albumId
@@ -65,8 +69,6 @@ exports.getSingleFile = function (req, res) {
         res.sendfile(path, function(err) {
           if (err) next(err);
         });
-      }, function(error) {
-        res.send(500, error);
-      });
-    });
+      }, fail);
+    }, fail);
 };

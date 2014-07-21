@@ -20,5 +20,6 @@ module.exports = {
             process.env.OPENSHIFT_MONGODB_DB_URL+process.env.OPENSHIFT_APP_NAME ||
             'mongodb://localhost/seriousboomerang'
   },
-  mediaDirectory: '/opt/serious-boomerang/'
+  mediaDirectory: '/opt/serious-boomerang/',
+  testImage: 'client/assets/images/left.png'
 };

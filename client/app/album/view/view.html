@@ -10,10 +10,12 @@
   </div>
   <!-- Single image -->
   <div ng-show="selectedImage" class="row">
-    <img class="showcase center-block" ng-src="{{ selectedImage.url }} {{ largeSize }}" alt="{{ selectedImage.name }}">
-    <button ng-show="hasImageAtPosition(prevImageID)" ng-click="setImage(prevImageID)">Prev</button>
-    <button ng-click="setImage(undefined)">Overzicht</button>
-    <button ng-show="hasImageAtPosition(nextImageID)" ng-click="setImage(nextImageID)">Next</button>
+    <img class="showcase center-block" ng-src="{{ selectedImage.url }}{{ largeSize }}" alt="{{ selectedImage.name }}" ng-click="setImage(nextImageID)">
+    <div class="controls">
+      <img ng-src="assets/images/left.png" ng-show="hasImageAtPosition(prevImageID)" ng-click="setImage(prevImageID)">
+      <img ng-src="assets/images/up.png" ng-click="setImage(undefined)">
+      <img ng-src="assets/images/right.png" ng-show="hasImageAtPosition(nextImageID)" ng-click="setImage(nextImageID)">
+    </div>
   </div>
   <!-- Overview -->
   <div ng-hide="selectedImage" class="row row-centered">

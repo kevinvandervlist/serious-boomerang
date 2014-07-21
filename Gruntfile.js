@@ -391,11 +391,9 @@ module.exports = function (grunt) {
       options: {
         configFile: 'protractor.conf.js'
       },
-      //chrome: {
       firefox: {
         options: {
           args: {
-            //browser: 'chrome'
             browser: 'firefox'
           }
         }
@@ -544,6 +542,7 @@ module.exports = function (grunt) {
     }
 
     else grunt.task.run([
+      'jshint:all',
       'test:server',
       'test:client'
     ]);

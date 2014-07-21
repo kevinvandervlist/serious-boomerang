@@ -51,7 +51,11 @@ ExpressControllerTester.prototype.asResponse = function(expectedFunc) {
  * @param validator
  */
 ExpressControllerTester.prototype.withValidation = function(validator) {
-  this.testFunc(this.req, this.res);
+  try {
+    this.testFunc(this.req, this.res);
+  } catch(err) {
+    this.doneFunc(err);
+  }
   this.deferredResult.promise.then(function(result) {
     try {
       validator(result.body, result.status);

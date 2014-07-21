@@ -4,6 +4,7 @@ var should = require('should');
 var Media = require('./media.model');
 var Album = require('../album/album.model');
 var controller = require('./media.controller');
+var fs = require('fs');
 var config = require('../../config/environment');
 var ExpressControllerTester = require('../../util/ExpressControllerTester');
 
@@ -118,16 +119,16 @@ describe('Media controller', function () {
     });
   });
 
-  it('should be able to retrieve an existing file', function(done) {
+  it('should fail to retrieve a non existing file', function(done) {
     mediaFoo.save(function() {
       ExpressControllerTester.doRequest(controller.getSingleFile, done)
         .withParams({
           albumId: albumFoo._id,
           mediaId: mediaFoo._id
         })
-        .asResponse('sendfile')
-        .withValidation(function (result) {
-          result.should.equal(config.mediaDirectory + '/media/2014/Foo/foo.jpg');
+        .asResponse('send')
+        .withValidation(function (result, err) {
+          err.should.be.exactly(500);
         });
     });
   });
