@@ -48,25 +48,25 @@ angular.module('seriousBoomerangApp')
   .controller('AlbumViewCtrl', function ($scope, $stateParams, $http, $q, authInterceptor) {
     var rx = Rx; // jshint ignore:line
     var token = authInterceptor.token();
-    var numberOfImages = -1;
+    var numberOfMedias = -1;
 
     $scope.album = null;
-    $scope.images = [];
+    $scope.media = [];
     $scope.thumbSize = '345';
     $scope.largeSize = '960';
 
-    $scope.selectedImage = undefined;
-    $scope.prevImageID = undefined;
-    $scope.nextImageID = undefined;
+    $scope.selectedMedia = undefined;
+    $scope.prevMediaID = undefined;
+    $scope.nextMediaID = undefined;
 
-    $scope.hasImageAtPosition = function(id) {
-      return (0 <= id) && (id < numberOfImages);
+    $scope.hasMediaAtPosition = function(id) {
+      return (0 <= id) && (id < numberOfMedias);
     };
 
-    $scope.setImage = function(id) {
-      $scope.selectedImage = $scope.images[id];
-      $scope.prevImageID = id - 1;
-      $scope.nextImageID = id + 1;
+    $scope.setMedia = function(id) {
+      $scope.selectedMedia = $scope.media[id];
+      $scope.prevMediaID = id - 1;
+      $scope.nextMediaID = id + 1;
     };
 
     var albumDetails = $http.get('/api/album/' + $stateParams.year + '/' + $stateParams.name);
@@ -81,11 +81,11 @@ angular.module('seriousBoomerangApp')
 
     getMediaLinksObservable(mediaObservable, token)
       .subscribe(function (media) {
-        $scope.images.push(media);
+        $scope.media.push(media);
       }, function() {}, function() {
-        numberOfImages = $scope.images.length;
-        // Now we received all images we can sort the images array.
-        $scope.images.sort(function(a, b) {
+        numberOfMedias = $scope.media.length;
+        // Now we received all media we can sort the media array.
+        $scope.media.sort(function(a, b) {
           return new Date(a.timestamp) - new Date(b.timestamp);
         });
       });

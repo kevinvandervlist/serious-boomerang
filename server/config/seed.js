@@ -94,6 +94,12 @@ Album.find({}).remove(function () {
           addedOn: new Date(),
           timestamp: new Date(),
           mediaType: 'image'
+        }, {
+          albumId: album._id,
+            name: 'three.mp4',
+            addedOn: new Date(),
+            timestamp: new Date(),
+            mediaType: 'video'
         });
       });
     });

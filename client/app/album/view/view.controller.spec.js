@@ -17,7 +17,7 @@ describe('Controller: AlbumViewCtrl', function () {
     locations: []
   };
 
-  var images = [
+  var media = [
     {
       _id: '53c6c1de37d5307816c6a300',
       albumId: '53c6c1de37d5307816c6a3ff',
@@ -49,7 +49,7 @@ describe('Controller: AlbumViewCtrl', function () {
       .respond(album);
 
     $httpBackend.expectGET('/api/media/53c6c1de37d5307816c6a3ff')
-      .respond(images);
+      .respond(media);
 
     scope = $rootScope.$new();
     AlbumViewCtrl = $controller('AlbumViewCtrl', {
@@ -69,16 +69,16 @@ describe('Controller: AlbumViewCtrl', function () {
     $httpBackend.verifyNoOutstandingRequest();
   });
 
-  it('should have received 3 images', function () {
+  it('should have received 3 media', function () {
     $httpBackend.flush();
-    expect(scope.images.length).toBe(3);
+    expect(scope.media.length).toBe(3);
     $httpBackend.verifyNoOutstandingRequest();
   });
 
   it('should not be able to navigate back on the first image.', function () {
     $httpBackend.flush();
     scope.setImage(0);
-    expect(scope.selectedImage).toEqual(scope.images[0]);
+    expect(scope.selectedImage).toEqual(scope.media[0]);
 
     expect(scope.prevImageID).toBe(-1);
     expect(scope.hasImageAtPosition(scope.prevImageID)).toBe(false);
@@ -91,7 +91,7 @@ describe('Controller: AlbumViewCtrl', function () {
   it('should be able to navigate back and forth on the second image.', function () {
     $httpBackend.flush();
     scope.setImage(1);
-    expect(scope.selectedImage).toEqual(scope.images[1]);
+    expect(scope.selectedImage).toEqual(scope.media[1]);
 
     expect(scope.prevImageID).toBe(0);
     expect(scope.hasImageAtPosition(scope.prevImageID)).toBe(true);
@@ -104,7 +104,7 @@ describe('Controller: AlbumViewCtrl', function () {
   it('should not be able to navigate forward on the third image.', function () {
     $httpBackend.flush();
     scope.setImage(2);
-    expect(scope.selectedImage).toEqual(scope.images[2]);
+    expect(scope.selectedImage).toEqual(scope.media[2]);
 
     expect(scope.prevImageID).toBe(1);
     expect(scope.hasImageAtPosition(scope.prevImageID)).toBe(true);
