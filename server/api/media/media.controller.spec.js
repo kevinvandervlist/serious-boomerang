@@ -4,7 +4,6 @@ var should = require('should');
 var Media = require('./media.model');
 var Album = require('../album/album.model');
 var controller = require('./media.controller');
-var fs = require('fs');
 var config = require('../../config/environment');
 var ExpressControllerTester = require('../../util/ExpressControllerTester');
 
