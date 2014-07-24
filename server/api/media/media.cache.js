@@ -19,12 +19,11 @@ function cachedPathImage(year, albumName, fileName, size) {
   return config.mediaDirectory + '/cache/' + year + '/' + albumName + '/' + file + '_' + size + '.' + ext;
 }
 
-function cachedPathVideo(year, albumName, fileName, size) {
+function cachedPathVideo(year, albumName, fileName, size, format) {
   var split = fileName.split('.');
-  var ext = 'webm';
   split.pop();
   var file = split.join('.');
-  return config.mediaDirectory + '/cache/' + year + '/' + albumName + '/' + file + '_' + size + '.' + ext;
+  return config.mediaDirectory + '/cache/' + year + '/' + albumName + '/' + file + '_' + size + '.' + format;
 }
 
 function exists(path) {
@@ -63,11 +62,34 @@ function makeWebM(original, destination, x, deferredResult) {
     .saveToFile(destination);
 }
 
-function resizeImage(original, destination, x, deferredResult) {
+function makeH264(original, destination, width, deferredResult) {
+  new FFmpeg({
+    source: original
+  })
+    .withVideoCodec('libx264')
+    .addOption('-profile:v', 'main')
+    .withVideoBitrate('500k')
+    .withFps(30)
+    .size(width + 'x?')
+    .audioCodec('libfdk_aac')
+    .audioBitrate('128k')
+    .addOption('-movflags', 'faststart')
+    .toFormat('mp4')
+    .on('error', function (err) {
+      deferredResult.reject(err);
+    })
+    .on('end', function () {
+      deferredResult.resolve(destination);
+    })
+    .saveToFile(destination);
+
+}
+
+function resizeImage(original, destination, format, width, deferredResult) {
   mkdirForFileIfNotExists(destination, defferedResult);
 
   gm(original)
-    .resize(x)
+    .resize(width)
     .autoOrient()
     .write(destination, function (err) {
       if (err) {
@@ -78,12 +100,16 @@ function resizeImage(original, destination, x, deferredResult) {
     });
 }
 
-function resizeVideo(original, destination, x, deferredResult) {
+function resizeVideo(original, destination, format, width, deferredResult) {
   mkdirForFileIfNotExists(destination, deferredResult);
-  makeWebM(original, destination, x, deferredResult);
+  if(format === 'webm') {
+    makeWebM(original, destination, width, deferredResult);
+  } else if(format === 'mp4') {
+    makeH264(original, destination, width, deferredResult);
+  }
 }
 
-function handleImageRequest(deferred, year, albumName, fileName, size) {
+function handleImageRequest(deferred, format, year, albumName, fileName, size) {
   var cached = cachedPathImage(year, albumName, fileName, size);
   var original = originalPath(year, albumName, fileName);
 
@@ -91,35 +117,35 @@ function handleImageRequest(deferred, year, albumName, fileName, size) {
     if(exists(cached)) {
       deferred.resolve(cached);
     } else {
-      resizeImage(original, cached, size, deferred);
+      resizeImage(original, cached, format, size, deferred);
     }
   } catch(err) {
     deferred.reject(err);
   }
 }
 
-function handleVideoRequest(deferred, year, albumName, fileName, size) {
-  var cached = cachedPathVideo(year, albumName, fileName, size);
+function handleVideoRequest(deferred, format, year, albumName, fileName, size) {
+  var cached = cachedPathVideo(year, albumName, fileName, size, format);
   var original = originalPath(year, albumName, fileName);
 
   try {
     if(exists(cached)) {
       deferred.resolve(cached);
     } else {
-      resizeVideo(original, cached, size, deferred);
+      resizeVideo(original, cached, format, size, deferred);
     }
   } catch(err) {
     deferred.reject(err);
   }
 }
 
-exports.fromCacheOrGenerate = function (type, year, albumName, fileName, size) {
+exports.fromCacheOrGenerate = function (type, format, year, albumName, fileName, size) {
   var deferred = Q.defer();
 
   if(type === 'image') {
-    handleImageRequest(deferred, year, albumName, fileName, size);
+    handleImageRequest(deferred, format, year, albumName, fileName, size);
   } else if (type === 'video') {
-    handleVideoRequest(deferred, year, albumName, fileName, size);
+    handleVideoRequest(deferred, format, year, albumName, fileName, size);
   } else {
     deferred.reject(new Error('I do not know what to do with type ' + type + '.'));
   }

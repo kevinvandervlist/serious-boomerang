@@ -4,17 +4,26 @@
   <div class="row">
     <div class="col-lg-12">
       <h3 class="page-header">{{ album.name }}</h3>
+
       <p>{{ album.description }}, van {{ album.startDateStr }} tot {{ album.endDateStr }}. Er zijn {{ media.length }}
         bestanden in dit album.</p>
     </div>
   </div>
-  <!-- Single media -->
+  <!-- Single media -> detailed view -->
   <div ng-show="selectedMedia" class="row">
-    <div ng-show="isImage(selectedMedia)" >
-      <img class="showcase center-block" ng-src="{{ asTrustedResource(selectedMedia.url, largeSize) }}" alt="{{ selectedMedia.name }}" ng-click="setMedia(nextMediaID)">
+    <div ng-show="util.isImage(selectedMedia)">
+      <img
+        class="showcase center-block"
+        ng-src="{{ util.asTrustedResource(selectedMedia.url, largeSize) }}"
+        alt="{{ selectedMedia.name }}" ng-click="setMedia(nextMediaID)"
+        >
     </div>
-    <div ng-show="isVideo(selectedMedia)" >
-      <video ng-src="{{ asTrustedResource(selectedMedia.url, largeSize) }}" controls preload="metadata"></video>
+    <div ng-show="util.isVideo(selectedMedia)">
+      <video controls preload="metadata">
+        <source ng-src="{{ util.asTrustedResource(selectedMedia.url.webm, largeSize) }}" type="video/webm">
+        <source ng-src="{{ util.asTrustedResource(selectedMedia.url.mp4, largeSize) }}" type="video/mp4">
+        Your browser does not support the <code>video</code> element.
+      </video>
     </div>
     <div class="controls">
       <img ng-src="assets/images/left.png" ng-show="hasMediaAtPosition(prevMediaID)" ng-click="setMedia(prevMediaID)">
@@ -25,8 +34,17 @@
   <!-- Overview -->
   <div ng-hide="selectedMedia" class="row row-centered">
     <div class="col-xs-4 col-centered media-data" ng-repeat="m in media">
-      <img ng-show="isImage(m)" class="media" ng-src="{{ asTrustedResource(m.url, thumbSize) }}" alt="{{ m.name }}" ng-click="setMedia($index)">
-      <video ng-show="isVideo(m)" class="media" ng-src="{{ asTrustedResource(m.url, thumbSize) }}" controls preload="metadata"></video>
+      <img
+        ng-show="util.isImage(m)"
+        class="media"
+        ng-src="{{ util.asTrustedResource(m.url, thumbSize) }}"
+        alt="{{ m.name }}" ng-click="setMedia($index)"
+        >
+      <video ng-show="util.isVideo(m)" class="media" controls preload="metadata">
+        <source ng-src="{{ util.asTrustedResource(m.url.webm, thumbSize) }}" type="video/webm">
+        <source ng-src="{{ util.asTrustedResource(m.url.mp4, thumbSize) }}" type="video/mp4">
+        Your browser does not support the <code>video</code> element.
+      </video>
     </div>
   </div>
 </div>

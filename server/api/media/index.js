@@ -13,6 +13,6 @@ function test() {
 
 router.get('/:albumId', auth.hasPermission(), controller.index);
 router.get('/:albumId/:mediaId/describe', auth.hasPermission(), controller.describeSingleFile);
-router.get('/:albumId/:mediaId/retrieve/:access_token/:size?', auth.hasPermission(), controller.getSingleFile);
+router.get('/:albumId/:mediaId/:format/retrieve/:access_token/:size?', auth.hasPermission(), controller.getSingleFile);
 
 module.exports = router;

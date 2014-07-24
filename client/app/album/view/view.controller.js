@@ -36,17 +36,35 @@ function getMediaDetails(rx, mediaDetailsPromise) {
     .flatMap(rx.Observable.fromArray);
 }
 
-function getMediaLinksObservable(mediaObservable, token) {
-  return mediaObservable
+function getMediaLinksObservable(rx, mediaObservable, token) {
+  var images = mediaObservable
+    .filter(function(media) {
+      return media.mediaType === 'image';
+    })
     .map(function(media) {
-      media.url = '/api/media/' + media.albumId + '/' + media._id + '/retrieve/' + token + '/';
+      media.url = '/api/media/' + media.albumId + '/' + media._id + '/jpg/retrieve/' + token + '/';
+      return media;
+  });
+
+  var videos = mediaObservable
+    .filter(function(media) {
+      return media.mediaType === 'video';
+    })
+    .map(function(media) {
+      media.url = {};
+      media.url.webm = '/api/media/' + media.albumId + '/' + media._id + '/webm/retrieve/' + token + '/';
+      media.url.mp4 = '/api/media/' + media.albumId + '/' + media._id + '/mp4/retrieve/' + token + '/';
       return media;
     });
+
+  return rx.Observable.merge(
+    images,
+    videos
+  );
 }
 
 angular.module('seriousBoomerangApp')
-  .controller('AlbumViewCtrl', function ($scope, $stateParams, $http, $q, $sce, authInterceptor) {
-    var rx = Rx; // jshint ignore:line
+  .controller('AlbumViewCtrl', function ($scope, $stateParams, $http, $q, HtmlUtilities, rx, authInterceptor) {
     var token = authInterceptor.token();
     var numberOfMediaFiles = -1;
 
@@ -59,6 +77,8 @@ angular.module('seriousBoomerangApp')
     $scope.prevMediaID = undefined;
     $scope.nextMediaID = undefined;
 
+    $scope.util = HtmlUtilities;
+
     $scope.hasMediaAtPosition = function(id) {
       return (0 <= id) && (id < numberOfMediaFiles);
     };
@@ -67,20 +87,6 @@ angular.module('seriousBoomerangApp')
       $scope.selectedMedia = $scope.media[id];
       $scope.prevMediaID = id - 1;
       $scope.nextMediaID = id + 1;
-    };
-
-    $scope.asTrustedResource = function(url, size) {
-      return $sce.trustAsResourceUrl(url + size);
-    };
-
-    $scope.isImage = function(media) {
-      if(!media) { return false; }
-      return media.mediaType === 'image';
-    };
-
-    $scope.isVideo = function(media) {
-      if(!media) { return false; }
-      return media.mediaType === 'video';
     };
 
     var albumDetails = $http.get('/api/album/' + $stateParams.year + '/' + $stateParams.name);
@@ -93,7 +99,7 @@ angular.module('seriousBoomerangApp')
       $scope.album = album;
     });
 
-    getMediaLinksObservable(mediaObservable, token)
+    getMediaLinksObservable(rx, mediaObservable, token)
       .subscribe(function (media) {
         $scope.media.push(media);
       }, function() {}, function() {
