@@ -5,8 +5,7 @@ var Media = require('./media.model');
 var passport = require('passport');
 var config = require('../../config/environment');
 var modelUtils = require('../../util/ModelUtils');
-var ImageCache = require('./image.cache');
-var VideoCache = require('./video.cache');
+var MediaCache = require('./media.cache');
 
 /**
  * Get list of media that's associated with the requested album
@@ -65,13 +64,7 @@ exports.getSingleFile = function (req, res) {
       var year = new Date(album.startDate).getFullYear();
       var fileName = media.name;
 
-      // TODO: Change this
-      var pathPromise = null;
-      if(media.mediaType === 'image') {
-        pathPromise = ImageCache.fromCacheOrGenerate(year, album.name, fileName, req.params.size);
-      } else if (media.mediaType === 'video') {
-        pathPromise = VideoCache.fromCache(year, album.name, fileName, req.params.size);
-      }
+      var pathPromise = MediaCache.fromCacheOrGenerate(media.mediaType, year, album.name, fileName, req.params.size);
 
       pathPromise.then(function(path) {
         res.sendfile(path, function(err) {

@@ -10,7 +10,7 @@ new FFmpeg({
   .withVideoBitrate('500k')
   .withFps(30)
   .size('690x?')
-  .audioCodec('libfdk_aac')
+  .audioCodec('libvorbis')
   .audioBitrate('128k')
   .toFormat('webm')
   .on('error', function (err) {

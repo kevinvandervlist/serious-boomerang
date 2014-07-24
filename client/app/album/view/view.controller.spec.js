@@ -77,40 +77,45 @@ describe('Controller: AlbumViewCtrl', function () {
 
   it('should not be able to navigate back on the first image.', function () {
     $httpBackend.flush();
-    scope.setImage(0);
-    expect(scope.selectedImage).toEqual(scope.media[0]);
+    scope.setMedia(0);
+    expect(scope.selectedMedia).toEqual(scope.media[0]);
 
-    expect(scope.prevImageID).toBe(-1);
-    expect(scope.hasImageAtPosition(scope.prevImageID)).toBe(false);
+    expect(scope.prevMediaID).toBe(-1);
+    expect(scope.hasMediaAtPosition(scope.prevMediaID)).toBe(false);
 
-    expect(scope.nextImageID).toBe(1);
-    expect(scope.hasImageAtPosition(scope.nextImageID)).toBe(true);
+    expect(scope.nextMediaID).toBe(1);
+    expect(scope.hasMediaAtPosition(scope.nextMediaID)).toBe(true);
     $httpBackend.verifyNoOutstandingRequest();
   });
 
   it('should be able to navigate back and forth on the second image.', function () {
     $httpBackend.flush();
-    scope.setImage(1);
-    expect(scope.selectedImage).toEqual(scope.media[1]);
+    scope.setMedia(1);
+    expect(scope.selectedMedia).toEqual(scope.media[1]);
 
-    expect(scope.prevImageID).toBe(0);
-    expect(scope.hasImageAtPosition(scope.prevImageID)).toBe(true);
+    expect(scope.prevMediaID).toBe(0);
+    expect(scope.hasMediaAtPosition(scope.prevMediaID)).toBe(true);
 
-    expect(scope.nextImageID).toBe(2);
-    expect(scope.hasImageAtPosition(scope.nextImageID)).toBe(true);
+    expect(scope.nextMediaID).toBe(2);
+    expect(scope.hasMediaAtPosition(scope.nextMediaID)).toBe(true);
     $httpBackend.verifyNoOutstandingRequest();
   });
 
   it('should not be able to navigate forward on the third image.', function () {
     $httpBackend.flush();
-    scope.setImage(2);
-    expect(scope.selectedImage).toEqual(scope.media[2]);
+    scope.setMedia(2);
+    expect(scope.selectedMedia).toEqual(scope.media[2]);
 
-    expect(scope.prevImageID).toBe(1);
-    expect(scope.hasImageAtPosition(scope.prevImageID)).toBe(true);
+    expect(scope.prevMediaID).toBe(1);
+    expect(scope.hasMediaAtPosition(scope.prevMediaID)).toBe(true);
 
-    expect(scope.nextImageID).toBe(3);
-    expect(scope.hasImageAtPosition(scope.nextImageID)).toBe(false);
+    expect(scope.nextMediaID).toBe(3);
+    expect(scope.hasMediaAtPosition(scope.nextMediaID)).toBe(false);
     $httpBackend.verifyNoOutstandingRequest();
   });
+
+  it('should show how many media files are shown on the page.', function() {
+    $httpBackend.flush();
+    expect(scope.media.length).toBe(3);
+  })
 });

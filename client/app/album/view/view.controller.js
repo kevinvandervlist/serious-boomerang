@@ -45,10 +45,10 @@ function getMediaLinksObservable(mediaObservable, token) {
 }
 
 angular.module('seriousBoomerangApp')
-  .controller('AlbumViewCtrl', function ($scope, $stateParams, $http, $q, authInterceptor) {
+  .controller('AlbumViewCtrl', function ($scope, $stateParams, $http, $q, $sce, authInterceptor) {
     var rx = Rx; // jshint ignore:line
     var token = authInterceptor.token();
-    var numberOfMedias = -1;
+    var numberOfMediaFiles = -1;
 
     $scope.album = null;
     $scope.media = [];
@@ -60,13 +60,27 @@ angular.module('seriousBoomerangApp')
     $scope.nextMediaID = undefined;
 
     $scope.hasMediaAtPosition = function(id) {
-      return (0 <= id) && (id < numberOfMedias);
+      return (0 <= id) && (id < numberOfMediaFiles);
     };
 
     $scope.setMedia = function(id) {
       $scope.selectedMedia = $scope.media[id];
       $scope.prevMediaID = id - 1;
       $scope.nextMediaID = id + 1;
+    };
+
+    $scope.asTrustedResource = function(url, size) {
+      return $sce.trustAsResourceUrl(url + size);
+    };
+
+    $scope.isImage = function(media) {
+      if(!media) { return false; }
+      return media.mediaType === 'image';
+    };
+
+    $scope.isVideo = function(media) {
+      if(!media) { return false; }
+      return media.mediaType === 'video';
     };
 
     var albumDetails = $http.get('/api/album/' + $stateParams.year + '/' + $stateParams.name);
@@ -83,7 +97,7 @@ angular.module('seriousBoomerangApp')
       .subscribe(function (media) {
         $scope.media.push(media);
       }, function() {}, function() {
-        numberOfMedias = $scope.media.length;
+        numberOfMediaFiles = $scope.media.length;
         // Now we received all media we can sort the media array.
         $scope.media.sort(function(a, b) {
           return new Date(a.timestamp) - new Date(b.timestamp);

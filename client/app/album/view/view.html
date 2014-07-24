@@ -4,14 +4,18 @@
   <div class="row">
     <div class="col-lg-12">
       <h3 class="page-header">{{ album.name }}</h3>
-      <p>{{ album.description }}, van {{ album.startDateStr }} tot {{ album.endDateStr }}. Er zijn {{ medias.length }}
+      <p>{{ album.description }}, van {{ album.startDateStr }} tot {{ album.endDateStr }}. Er zijn {{ media.length }}
         bestanden in dit album.</p>
     </div>
   </div>
   <!-- Single media -->
   <div ng-show="selectedMedia" class="row">
-    <img class="showcase center-block" ng-src="{{ selectedMedia.url }}{{ largeSize }}" alt="{{ selectedMedia.name }}" ng-click="setMedia(nextMediaID)">
-    <video ng-src="{{ selectedMedia.url }}" controls></video>
+    <div ng-show="isImage(selectedMedia)" >
+      <img class="showcase center-block" ng-src="{{ asTrustedResource(selectedMedia.url, largeSize) }}" alt="{{ selectedMedia.name }}" ng-click="setMedia(nextMediaID)">
+    </div>
+    <div ng-show="isVideo(selectedMedia)" >
+      <video ng-src="{{ asTrustedResource(selectedMedia.url, largeSize) }}" controls preload="metadata"></video>
+    </div>
     <div class="controls">
       <img ng-src="assets/images/left.png" ng-show="hasMediaAtPosition(prevMediaID)" ng-click="setMedia(prevMediaID)">
       <img ng-src="assets/images/up.png" ng-click="setMedia(undefined)">
@@ -21,7 +25,8 @@
   <!-- Overview -->
   <div ng-hide="selectedMedia" class="row row-centered">
     <div class="col-xs-4 col-centered media-data" ng-repeat="m in media">
-      <img class="media" ng-src="{{ m.url }}{{ thumbSize }}" alt="{{ m.name }}" ng-click="setMedia($index)">
+      <img ng-show="isImage(m)" class="media" ng-src="{{ asTrustedResource(m.url, thumbSize) }}" alt="{{ m.name }}" ng-click="setMedia($index)">
+      <video ng-show="isVideo(m)" class="media" ng-src="{{ asTrustedResource(m.url, thumbSize) }}" controls preload="metadata"></video>
     </div>
   </div>
 </div>

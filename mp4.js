@@ -11,7 +11,7 @@ new FFmpeg({
   .withVideoBitrate('500k')
   .withFps(30)
   .size('690x?')
-  .audioCodec('libvorbis')
+  .audioCodec('libfdk_aac')
   .audioBitrate('128k')
   .addOption('-movflags', 'faststart')
   .toFormat('mp4')
