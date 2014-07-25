@@ -87,6 +87,14 @@ angular.module('seriousBoomerangApp')
       $scope.selectedMedia = $scope.media[id];
       $scope.prevMediaID = id - 1;
       $scope.nextMediaID = id + 1;
+      var videos = document.getElementsByTagName('video');
+      Array.prototype.forEach.call(videos, function(video) {
+        video.pause();
+        while (video.firstChild) {
+          video.removeChild(video.firstChild);
+        }
+        console.log(video);
+      });
     };
 
     $scope.overviewActive = function() {
