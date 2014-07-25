@@ -9,42 +9,54 @@
         bestanden in dit album.</p>
     </div>
   </div>
-  <!-- Single media -> detailed view -->
-  <div ng-show="selectedMedia" class="row">
-    <div ng-show="util.isImage(selectedMedia)">
-      <img
-        class="showcase center-block"
-        ng-src="{{ util.asTrustedResource(selectedMedia.url, largeSize) }}"
-        alt="{{ selectedMedia.name }}" ng-click="setMedia(nextMediaID)"
-        >
+  <div ng-switch on="overviewActive()">
+    <!-- Single media -> detailed view -->
+    <div class="animate-switch" ng-switch-when="false">
+      <div class="row">
+        <div ng-switch on="selectedMedia.mediaType">
+          <div ng-switch-when="image">
+            <img
+              class="showcase center-block"
+              ng-src="{{ util.asTrustedResource(selectedMedia.url, largeSize) }}"
+              alt="{{ selectedMedia.name }}" ng-click="setMedia(nextMediaID)"
+              >
+          </div>
+          <div ng-switch-when="video">
+            <video controls preload="metadata">
+              <source ng-src="{{ util.asTrustedResource(selectedMedia.url.webm, largeSize) }}" type="video/webm">
+              <source ng-src="{{ util.asTrustedResource(selectedMedia.url.mp4, largeSize) }}" type="video/mp4">
+              Your browser does not support the <code>video</code> element.
+            </video>
+          </div>
+        </div>
+        <div class="controls">
+          <img ng-src="assets/images/left.png" ng-show="hasMediaAtPosition(prevMediaID)"
+               ng-click="setMedia(prevMediaID)">
+          <img ng-src="assets/images/up.png" ng-click="setMedia(undefined)">
+          <img ng-src="assets/images/right.png" ng-show="hasMediaAtPosition(nextMediaID)"
+               ng-click="setMedia(nextMediaID)">
+        </div>
+      </div>
     </div>
-    <div ng-show="util.isVideo(selectedMedia)">
-      <video controls preload="metadata">
-        <source ng-src="{{ util.asTrustedResource(selectedMedia.url.webm, largeSize) }}" type="video/webm">
-        <source ng-src="{{ util.asTrustedResource(selectedMedia.url.mp4, largeSize) }}" type="video/mp4">
-        Your browser does not support the <code>video</code> element.
-      </video>
-    </div>
-    <div class="controls">
-      <img ng-src="assets/images/left.png" ng-show="hasMediaAtPosition(prevMediaID)" ng-click="setMedia(prevMediaID)">
-      <img ng-src="assets/images/up.png" ng-click="setMedia(undefined)">
-      <img ng-src="assets/images/right.png" ng-show="hasMediaAtPosition(nextMediaID)" ng-click="setMedia(nextMediaID)">
-    </div>
-  </div>
-  <!-- Overview -->
-  <div ng-hide="selectedMedia" class="row row-centered">
-    <div class="col-xs-4 col-centered media-data" ng-repeat="m in media">
-      <img
-        ng-show="util.isImage(m)"
-        class="media"
-        ng-src="{{ util.asTrustedResource(m.url, thumbSize) }}"
-        alt="{{ m.name }}" ng-click="setMedia($index)"
-        >
-      <video ng-show="util.isVideo(m)" class="media" controls preload="metadata">
-        <source ng-src="{{ util.asTrustedResource(m.url.webm, thumbSize) }}" type="video/webm">
-        <source ng-src="{{ util.asTrustedResource(m.url.mp4, thumbSize) }}" type="video/mp4">
-        Your browser does not support the <code>video</code> element.
-      </video>
+    <div class="animate-switch" ng-switch-when="true">
+      <!-- Overview -->
+      <div class="row row-centered">
+        <div class="col-xs-4 col-centered media-data" ng-repeat="m in media">
+          <div ng-switch on="m.mediaType">
+            <img
+              ng-switch-when="image"
+              class="media"
+              ng-src="{{ util.asTrustedResource(m.url, thumbSize) }}"
+              alt="{{ m.name }}" ng-click="setMedia($index)"
+              >
+            <video ng-switch-when="video" class="media" controls preload="metadata">
+              <source ng-src="{{ util.asTrustedResource(m.url.webm, thumbSize) }}" type="video/webm">
+              <source ng-src="{{ util.asTrustedResource(m.url.mp4, thumbSize) }}" type="video/mp4">
+              Your browser does not support the <code>video</code> element.
+            </video>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

@@ -89,6 +89,10 @@ angular.module('seriousBoomerangApp')
       $scope.nextMediaID = id + 1;
     };
 
+    $scope.overviewActive = function() {
+      return $scope.selectedMedia === undefined;
+    };
+
     var albumDetails = $http.get('/api/album/' + $stateParams.year + '/' + $stateParams.name);
     var deferredMediaDetails = $q.defer();
 
