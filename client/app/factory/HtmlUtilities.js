@@ -1,8 +1,10 @@
+'use strict';
+/*jshint -W024 */
+
 angular.module('seriousBoomerangApp')
   .factory('HtmlUtilities', function ($sce) {
-    function concatArguments(arguments, separator) {
-      var args = Array.prototype.slice.call(arguments, 0);
-      return args.join(separator);
+    function concatArguments(args, separator) {
+      return Array.prototype.join.call(args, separator);
     }
 
     return {
@@ -12,5 +14,5 @@ angular.module('seriousBoomerangApp')
         }
         return $sce.trustAsResourceUrl(concatArguments(arguments, ''));
       }
-    }
+    };
   });

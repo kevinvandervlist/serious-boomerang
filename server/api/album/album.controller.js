@@ -3,11 +3,6 @@
 var Album = require('./album.model');
 var passport = require('passport');
 var config = require('../../config/environment');
-var jwt = require('jsonwebtoken');
-
-var validationError = function (res, err) {
-  return res.json(422, err);
-};
 
 /**
  * Get list of albums
@@ -20,7 +15,7 @@ exports.index = function (req, res) {
 };
 
 /**
- *
+ * Get the details of an album.
  */
 exports.albumdetails = function (req, res) {
   var year = req.params.year;
@@ -39,21 +34,6 @@ exports.albumdetails = function (req, res) {
     if (err) return res.send(500, err);
     if (!album) return res.send(401);
     res.json(album);
-  });
-};
-
-
-/**
- * Creates a new album
- */
-exports.create = function (req, res, next) {
-  var newAlbum = new Album(req.body);
-  newAlbum.provider = 'local';
-  newAlbum.role = 'album';
-  newAlbum.save(function (err, album) {
-    if (err) return validationError(res, err);
-    var token = jwt.sign({_id: album._id }, config.secrets.session, { expiresInMinutes: 60 * 5 });
-    res.json({ token: token });
   });
 };
 

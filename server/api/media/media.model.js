@@ -59,7 +59,7 @@ MediaSchema
       if (err) throw err;
       return respond(user === null);
     });
-  }, 'The combination of albumId and name must be unique (image already exists).');
+  }, 'The combination of albumId and name must be unique (media file already exists).');
 
 MediaSchema
   .path('name')
