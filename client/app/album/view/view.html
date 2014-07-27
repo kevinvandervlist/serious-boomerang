@@ -36,6 +36,11 @@
           <img ng-src="assets/images/right.png" ng-show="hasMediaAtPosition(nextMediaID)"
                ng-click="setMedia(nextMediaID)">
         </div>
+        <div class="comments">
+          <div class="col-xs-8 col-centered comment" ng-repeat="c in comments | orderBy:'timestamp'">
+            <p>{{ c.author.name }} - {{ c.text }} @ {{ c.timestamp }}</p>
+          </div>
+        </div>
       </div>
     </div>
     <div class="animate-switch" ng-switch-when="true">

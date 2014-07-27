@@ -8,11 +8,7 @@ function humanReadableDate(date) {
 function getAlbumDetails(rx, $q, $http, albumDetailsPromise, deferredMediaDetails) {
   var deferredAlbum = $q.defer();
 
-  rx.Observable
-    .fromPromise(albumDetailsPromise)
-    .map(function (response) {
-      return response.data;
-    })
+  getResourceObservable(rx, albumDetailsPromise)
     .subscribe(function (album) {
       $http.get('/api/media/' + album._id).
         then(function (result) {
@@ -27,12 +23,16 @@ function getAlbumDetails(rx, $q, $http, albumDetailsPromise, deferredMediaDetail
   return deferredAlbum.promise;
 }
 
-function getMediaDetails(rx, mediaDetailsPromise) {
+function getResourceObservable(rx, httpGetPromise) {
   return rx.Observable
-    .fromPromise(mediaDetailsPromise)
+    .fromPromise(httpGetPromise)
     .map(function (response) {
       return response.data;
     })
+}
+
+function getResourceListObservable(rx, httpGetPromise) {
+  return getResourceObservable(rx, httpGetPromise)
     .flatMap(rx.Observable.fromArray);
 }
 
@@ -63,6 +63,22 @@ function getMediaLinksObservable(rx, mediaObservable, token) {
   );
 }
 
+function retrieveComments(rx, $http, $scope, mediaId) {
+  $scope.comments = [];
+  getResourceListObservable(rx, $http.get('/api/comment/' + mediaId))
+    .flatMap(function(comment) {
+      return getResourceObservable(rx, $http.get('/api/users/' + comment.author))
+        .take(1)
+        .map(function(user) {
+          comment.author = user;
+          return comment;
+        });
+    })
+    .subscribe(function(comment) {
+      $scope.comments.push(comment);
+    });
+}
+
 angular.module('seriousBoomerangApp')
   .controller('AlbumViewCtrl', function ($scope, $stateParams, $http, $q, HtmlUtilities, rx, authInterceptor) {
     var token = authInterceptor.token();
@@ -76,6 +92,7 @@ angular.module('seriousBoomerangApp')
     $scope.selectedMedia = undefined;
     $scope.prevMediaID = undefined;
     $scope.nextMediaID = undefined;
+    $scope.comments = [];
 
     $scope.util = HtmlUtilities;
 
@@ -84,16 +101,19 @@ angular.module('seriousBoomerangApp')
     };
 
     $scope.setMedia = function(id) {
+      retrieveComments(rx, $http, $scope, $scope.media[id]._id);
+
       $scope.selectedMedia = $scope.media[id];
       $scope.prevMediaID = id - 1;
       $scope.nextMediaID = id + 1;
+
       var videos = document.getElementsByTagName('video');
+
       Array.prototype.forEach.call(videos, function(video) {
         video.pause();
         while (video.firstChild) {
           video.removeChild(video.firstChild);
         }
-        console.log(video);
       });
     };
 
@@ -105,7 +125,7 @@ angular.module('seriousBoomerangApp')
     var deferredMediaDetails = $q.defer();
 
     var albumPromise = getAlbumDetails(rx, $q, $http, albumDetails, deferredMediaDetails);
-    var mediaObservable = getMediaDetails(rx, deferredMediaDetails.promise);
+    var mediaObservable = getResourceListObservable(rx, deferredMediaDetails.promise);
 
     albumPromise.then(function (album) {
       $scope.album = album;

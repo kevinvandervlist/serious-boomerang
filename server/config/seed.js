@@ -9,6 +9,7 @@ var Thing = require('../api/thing/thing.model');
 var User = require('../api/user/user.model');
 var Album = require('../api/album/album.model');
 var Media = require('../api/media/media.model');
+var Comment = require('../api/comment/comment.model');
 
 Thing.find({}).remove(function () {
   Thing.create({
@@ -100,6 +101,27 @@ Album.find({}).remove(function () {
             addedOn: new Date(),
             timestamp: new Date(),
             mediaType: 'video'
+        }, function() {
+          Comment.find({}).remove(function() {
+            Media.findOne({albumId: album._id, name: 'one.jpg'}, function(err, media) {
+              User.findOne({name: 'usera'}, function(err, user) {
+                Comment.create({
+                  mediaId: media._id,
+                  author: user._id,
+                  text: 'A first comment',
+                  timestamp: new Date()
+                })
+              });
+              User.findOne({name: 'userb'}, function(err, user) {
+                Comment.create({
+                  mediaId: media._id,
+                  author: user._id,
+                  text: 'A second comment',
+                  timestamp: new Date()
+                })
+              });
+            });
+          });
         });
       });
     });
