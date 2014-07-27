@@ -13,6 +13,10 @@ angular.module('seriousBoomerangApp')
           console.log(concatArguments(arguments, ''));
         }
         return $sce.trustAsResourceUrl(concatArguments(arguments, ''));
+      },
+      humanReadableTimestamp: function(timestamp) {
+        var d = new Date(timestamp);
+        return d.toString();
       }
     };
   });

@@ -11,3 +11,32 @@
 
 .controls {
 }
+
+.comment {
+  padding-bottom: 15px;
+}
+.commentheader {
+  font-size:1em;
+  margin-left:20px;
+  margin-bottom:10px;
+}
+.commentcontent {
+  font-size:1em;
+  padding-left:30px;
+  padding-top:5px;
+  padding-bottom:5px;
+
+}
+.commentauthor {
+  font-weight: bold;
+  font-size:1.2em;
+}
+.commenttimestamp {
+  font-size:1.0em;
+}
+.evencomment {
+  background: #d7d7d7;
+}
+.oddcomment {
+  background: #e1e1e1;
+}

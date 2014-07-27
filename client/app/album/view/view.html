@@ -37,8 +37,13 @@
                ng-click="setMedia(nextMediaID)">
         </div>
         <div class="comments">
-          <div class="col-xs-8 col-centered comment" ng-repeat="c in comments | orderBy:'timestamp'">
-            <p>{{ c.author.name }} - {{ c.text }} @ {{ c.timestamp }}</p>
+          <div class="col-xs-8 col-centered comment" ng-repeat="c in comments | orderBy:'timestamp'" ng-class-odd="'oddcomment'" ng-class-even="'evencomment'">
+            <div class="commentheader">
+              Geplaatst door <span class="commentauthor">{{ c.author.name }}</span> op <span class="commenttimestamp">{{ util.humanReadableTimestamp(c.timestamp) }}</span>
+            </div>
+            <div class="commentcontent">
+              {{ c.text }}
+            </div>
           </div>
         </div>
       </div>
