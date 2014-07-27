@@ -5,6 +5,19 @@ function humanReadableDate(date) {
   return d.getDay() + '-' + d.getMonth() + '-' + d.getFullYear();
 }
 
+function getResourceObservable(rx, httpGetPromise) {
+    return rx.Observable
+        .fromPromise(httpGetPromise)
+        .map(function (response) {
+            return response.data;
+        });
+}
+
+function getResourceListObservable(rx, httpGetPromise) {
+    return getResourceObservable(rx, httpGetPromise)
+        .flatMap(rx.Observable.fromArray);
+}
+
 function getAlbumDetails(rx, $q, $http, albumDetailsPromise, deferredMediaDetails) {
   var deferredAlbum = $q.defer();
 
@@ -21,19 +34,6 @@ function getAlbumDetails(rx, $q, $http, albumDetailsPromise, deferredMediaDetail
     });
 
   return deferredAlbum.promise;
-}
-
-function getResourceObservable(rx, httpGetPromise) {
-  return rx.Observable
-    .fromPromise(httpGetPromise)
-    .map(function (response) {
-      return response.data;
-    })
-}
-
-function getResourceListObservable(rx, httpGetPromise) {
-  return getResourceObservable(rx, httpGetPromise)
-    .flatMap(rx.Observable.fromArray);
 }
 
 function getMediaLinksObservable(rx, mediaObservable, token) {
