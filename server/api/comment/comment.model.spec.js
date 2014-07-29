@@ -1,6 +1,7 @@
 'use strict';
 
 var should = require('should');
+var Q = require('q');
 var Comment = require('./comment.model');
 var Album = require('../album/album.model');
 var Media = require('../media/media.model');
@@ -17,34 +18,6 @@ function createComment(_text, _date) {
     author: userFoo._id,
     text: _text,
     timestamp: _date
-  });
-}
-
-function cleanup(cb) {
-  var cnt = 0;
-
-  var done = function() {
-    cnt++;
-    if(cnt == 4) {
-      cb();
-    }
-  };
-
-  // Clear comments before testing
-  Comment.remove().exec().then(function() {
-    done();
-  });
-
-  Album.remove().exec().then(function() {
-    done();
-  });
-
-  Media.remove().exec().then(function() {
-    done();
-  });
-
-  User.remove().exec().then(function() {
-    done();
   });
 }
 
@@ -82,8 +55,17 @@ describe('Comment Model', function() {
     });
   });
 
-  afterEach(function(done) {
-    cleanup(done);
+  afterEach(function (done) {
+    Q.all([
+      Comment.remove().exec(),
+      User.remove().exec(),
+      Album.remove().exec(),
+      Media.remove().exec()
+    ]).then(function() {
+      done();
+    }, function(err) {
+      done(err);
+    });
   });
 
   it('should begin with no comments', function(done) {

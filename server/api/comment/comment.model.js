@@ -55,9 +55,9 @@ CommentSchema
   .validate(function (v, respond) {
     User.findOne({
       _id: v
-    }, function (err, album) {
+    }, function (err, user) {
       if (err) throw err;
-      return respond(album !== null);
+      return respond(user !== null);
     });
   }, 'The referenced author should exist.');
 

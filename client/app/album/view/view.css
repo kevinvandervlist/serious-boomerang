@@ -9,7 +9,9 @@
   max-height: 98%;
 }
 
-.controls {
+.controls img {
+  min-width: 10%;
+  max-width: 25%;
 }
 
 .comment {
@@ -35,8 +37,8 @@
   font-size:1.0em;
 }
 .evencomment {
-  background: #d7d7d7;
+  background: #e1e1e1;
 }
 .oddcomment {
-  background: #e1e1e1;
+  background: #f0f0f0;
 }

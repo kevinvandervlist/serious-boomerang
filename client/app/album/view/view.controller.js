@@ -101,6 +101,10 @@ angular.module('seriousBoomerangApp')
     };
 
     $scope.setMedia = function(id) {
+      if(id === undefined) {
+        $scope.selectedMedia = undefined;
+        return;
+      }
       retrieveComments(rx, $http, $scope, $scope.media[id]._id);
 
       $scope.selectedMedia = $scope.media[id];

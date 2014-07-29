@@ -9,5 +9,6 @@ var router = express.Router();
 
 router.get('/', auth.hasPermission(), controller.allComments);
 router.get('/:mediaId', auth.hasPermission(), controller.commentsByMediaId);
+router.post('/:mediaId', auth.hasPermission(), controller.newComment);
 
 module.exports = router;

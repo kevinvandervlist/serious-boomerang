@@ -12,7 +12,9 @@ var ExpressControllerTester = function (_testFunc, _doneFunc) {
   this.doneFunc = _doneFunc;
 
   this.req = {
-    params: {}
+    params: {},
+    user: {},
+    body: {}
   };
 
   this.res = {
@@ -21,8 +23,18 @@ var ExpressControllerTester = function (_testFunc, _doneFunc) {
   this.deferredResult = Q.defer();
 };
 
+ExpressControllerTester.prototype.asUser = function(user) {
+  this.req.user = user;
+  return this;
+};
+
 ExpressControllerTester.prototype.withParams = function(params) {
   this.req.params = params;
+  return this;
+};
+
+ExpressControllerTester.prototype.withBody = function(body) {
+  this.req.body = body;
   return this;
 };
 
