@@ -923,7 +923,7 @@ Q.all([
 ]).then(function() {
   console.log('Seeding completed.');
 }, function(err) {
-  console.error('An error occurred while seeding the project!')
+  console.error('An error occurred while seeding the project!');
   console.error('The error is: ');
   console.error(err);
 });

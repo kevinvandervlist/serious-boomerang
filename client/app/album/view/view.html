@@ -12,8 +12,8 @@
   <div ng-switch on="overviewActive()">
     <!-- Single media -> detailed view -->
     <div class="animate-switch" ng-switch-when="false">
-      <div class="row">
-        <div ng-switch on="selectedMedia.mediaType">
+      <div>
+        <div class="row" ng-switch on="selectedMedia.mediaType">
           <div ng-switch-when="image">
             <img
               class="showcase center-block"
@@ -29,15 +29,15 @@
             </video>
           </div>
         </div>
-        <div class="controls">
+        <div class="row controls">
           <img ng-src="assets/images/left.png" ng-show="hasMediaAtPosition(prevMediaID)"
                ng-click="setMedia(prevMediaID)">
           <img ng-src="assets/images/up.png" ng-click="setMedia(undefined)">
           <img ng-src="assets/images/right.png" ng-show="hasMediaAtPosition(nextMediaID)"
                ng-click="setMedia(nextMediaID)">
         </div>
-        <div class="comments">
-          <div class="col-xs-8 col-centered comment" ng-repeat="c in comments | orderBy:'timestamp'" ng-class-odd="'oddcomment'" ng-class-even="'evencomment'">
+        <div class="row comments">
+          <div class="col-xs-12 col-centered comment" ng-repeat="c in comments | orderBy:'timestamp'" ng-class-odd="'oddcomment'" ng-class-even="'evencomment'">
             <div class="commentheader">
               Geplaatst door <span class="commentauthor">{{ c.author.name }}</span> op <span class="commenttimestamp">{{ util.humanReadableTimestamp(c.timestamp) }}</span>
             </div>
@@ -45,6 +45,15 @@
               {{ c.text }}
             </div>
           </div>
+        </div>
+        <div class="row write-comment">
+          <form ng-submit="saveComment()">
+            <textarea class="input-lg user-comment" ng-model="comment.text" type="text" name="user-comment" placeholder="Je reactie"></textarea>
+            <span class="input-lg error" ng-show="comment.error">{{ comment.error }}</span>
+            <button type="submit" class="btn btn-success btn-lg btn-block">
+              <span class="glyphicon glyphicon-flash"></span> Opslaan
+            </button>
+          </form>
         </div>
       </div>
     </div>

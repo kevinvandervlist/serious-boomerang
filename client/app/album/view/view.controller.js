@@ -79,6 +79,19 @@ function retrieveComments(rx, $http, $scope, mediaId) {
     });
 }
 
+function configureDetailedMediaView(rx, $http, $scope) {
+  retrieveComments(rx, $http, $scope, $scope.selectedMedia._id);
+
+  var videos = document.getElementsByTagName('video');
+
+  Array.prototype.forEach.call(videos, function(video) {
+    video.pause();
+    while (video.firstChild) {
+      video.removeChild(video.firstChild);
+    }
+  });
+}
+
 angular.module('seriousBoomerangApp')
   .controller('AlbumViewCtrl', function ($scope, $stateParams, $http, $q, HtmlUtilities, rx, authInterceptor) {
     var token = authInterceptor.token();
@@ -93,6 +106,7 @@ angular.module('seriousBoomerangApp')
     $scope.prevMediaID = undefined;
     $scope.nextMediaID = undefined;
     $scope.comments = [];
+    $scope.comment = {};
 
     $scope.util = HtmlUtilities;
 
@@ -101,28 +115,30 @@ angular.module('seriousBoomerangApp')
     };
 
     $scope.setMedia = function(id) {
-      if(id === undefined) {
+      if (id === undefined) {
         $scope.selectedMedia = undefined;
-        return;
+      } else {
+        $scope.selectedMedia = $scope.media[id];
+        $scope.prevMediaID = id - 1;
+        $scope.nextMediaID = id + 1;
+        configureDetailedMediaView(rx, $http, $scope);
       }
-      retrieveComments(rx, $http, $scope, $scope.media[id]._id);
-
-      $scope.selectedMedia = $scope.media[id];
-      $scope.prevMediaID = id - 1;
-      $scope.nextMediaID = id + 1;
-
-      var videos = document.getElementsByTagName('video');
-
-      Array.prototype.forEach.call(videos, function(video) {
-        video.pause();
-        while (video.firstChild) {
-          video.removeChild(video.firstChild);
-        }
-      });
     };
 
     $scope.overviewActive = function() {
       return $scope.selectedMedia === undefined;
+    };
+
+    $scope.saveComment = function() {
+      $http.post('/api/comment/' + $scope.selectedMedia._id, $scope.comment)
+        .success(function(data, status) {
+          if(status === 201) {
+            configureDetailedMediaView(rx, $http, $scope);
+            $scope.comment = {};
+          } else {
+            $scope.comment.error = 'Helaas, er is iets fout gegaan: ' + data;
+          }
+      })
     };
 
     var albumDetails = $http.get('/api/album/' + $stateParams.year + '/' + $stateParams.name);

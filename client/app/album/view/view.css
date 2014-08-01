@@ -37,8 +37,11 @@
   font-size:1.0em;
 }
 .evencomment {
-  background: #e1e1e1;
+  background: rgba(71, 164, 71, 0.40);
 }
 .oddcomment {
-  background: #f0f0f0;
+  background: rgba(71, 164, 71, 0.30);
+}
+.user-comment {
+  width: 100%;
 }
