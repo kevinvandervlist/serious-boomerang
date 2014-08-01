@@ -1,19 +1,13 @@
 'use strict';
 
 var should = require('should');
+var Q = require('q');
 var Media = require('./media.model');
 var Album = require('../album/album.model');
 
 var albumFoo, albumBar, mediaFoo, mediaBar;
 
 describe('Media Model', function () {
-  beforeEach(function(done) {
-    // Clear media before testing
-    Media.remove().exec().then(function () {
-      done();
-    });
-  });
-
   beforeEach(function (done) {
     albumFoo = new Album({
       name: 'Foo',
@@ -21,40 +15,46 @@ describe('Media Model', function () {
       startDate: new Date,
       endDate: new Date
     });
-    albumFoo.save(function () {
-      mediaFoo = new Media({
-        albumId: albumFoo._id,
-        name: 'foo.jpg  ',
-        addedOn: new Date(),
-        timestamp: new Date(),
-        mediaType: 'image'
-      });
-      done();
+    mediaFoo = new Media({
+      albumId: albumFoo._id,
+      name: 'foo.jpg  ',
+      addedOn: new Date(),
+      timestamp: new Date(),
+      mediaType: 'image'
     });
-  });
 
-  beforeEach(function(done) {
     albumBar = new Album({
       name: 'Bar',
       description: 'Bar',
       startDate: new Date,
       endDate: new Date
     });
-    albumBar.save(function () {
-      mediaBar = new Media({
-        albumId: albumBar._id,
-        name: 'bar.jpg',
-        addedOn: new Date(),
-        timestamp: new Date(),
-        mediaType: 'video'
-      });
+    mediaBar = new Media({
+      albumId: albumBar._id,
+      name: 'bar.jpg',
+      addedOn: new Date(),
+      timestamp: new Date(),
+      mediaType: 'video'
+    });
+
+    Q.all([
+      Q.ninvoke(albumFoo, 'save'),
+      Q.ninvoke(albumBar, 'save')
+    ]).then(function () {
       done();
+    }, function(err) {
+      done(err);
     });
   });
 
   afterEach(function (done) {
-    Media.remove().exec().then(function () {
+    Q.all([
+      Album.remove().exec(),
+      Media.remove().exec()
+    ]).then(function () {
       done();
+    }, function (err) {
+      done(err);
     });
   });
 

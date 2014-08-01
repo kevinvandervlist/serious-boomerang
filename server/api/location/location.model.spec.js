@@ -6,7 +6,7 @@ var Location = require('./location.model');
 var location;
 
 describe('Location Model', function() {
-  before(function(done) {
+  before(function() {
     location = new Location({
       description: " Dit is een beschrijving. ",
       street: " Straat ",
@@ -19,11 +19,6 @@ describe('Location Model', function() {
         4.870551422615059,
         51.932412885903354
       ]
-    });
-
-    // Clear locations before testing
-    Location.remove().exec().then(function() {
-      done();
     });
   });
 

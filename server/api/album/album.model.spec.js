@@ -1,12 +1,13 @@
 'use strict';
 
 var should = require('should');
+var Q = require('q');
 var Album = require('./album.model');
 
 var album;
 
 describe('Album Model', function() {
-  beforeEach(function(done) {
+  beforeEach(function() {
     album = new Album({
       name: 'A name ',
       description: ' A certain description ',
@@ -14,16 +15,15 @@ describe('Album Model', function() {
       endDate: new Date,
       locations: []
     });
-
-    // Clear albums before testing
-    Album.remove().exec().then(function() {
-      done();
-    });
   });
 
   afterEach(function(done) {
-    Album.remove().exec().then(function() {
+    Q.all([
+      Album.remove().exec(),
+    ]).then(function () {
       done();
+    }, function (err) {
+      done(err);
     });
   });
 

@@ -1,28 +1,28 @@
 'use strict';
 
 var should = require('should');
+var Q = require('q');
 var User = require('./user.model');
 
 var user;
 
 describe('User Model', function() {
-  before(function(done) {
+  before(function() {
     user = new User({
       provider: 'local',
       name: 'Fake User',
       email: 'test@test.com',
       password: 'password'
     });
-
-    // Clear users before testing
-    User.remove().exec().then(function() {
-      done();
-    });
   });
 
   afterEach(function(done) {
-    User.remove().exec().then(function() {
+    Q.all([
+      User.remove().exec()
+    ]).then(function () {
       done();
+    }, function (err) {
+      done(err);
     });
   });
 

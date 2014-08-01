@@ -51,14 +51,9 @@ describe('Comment Model', function () {
       })
       .then(function () {
         done();
+      }, function(err) {
+        done(err);
       });
-  });
-
-  beforeEach(function (done) {
-
-    userFoo.save(function () {
-      done();
-    });
   });
 
   afterEach(function (done) {
