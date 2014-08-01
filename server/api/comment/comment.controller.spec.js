@@ -20,34 +20,39 @@ describe('Comment controller', function () {
       email: 'a@b.c',
       password: 'test'
     });
-    userFoo.save(function() {
-      albumFoo = new Album({
-        name: 'Foo',
-        description: 'Foo',
-        startDate: new Date,
-        endDate: new Date
+    albumFoo = new Album({
+      name: 'Foo',
+      description: 'Foo',
+      startDate: new Date,
+      endDate: new Date
+    });
+    mediaFoo = new Media({
+      albumId: albumFoo._id,
+      name: 'foo.jpg  ',
+      addedOn: new Date(),
+      timestamp: new Date(),
+      mediaType: 'image'
+    });
+    commentFoo = new Comment({
+      mediaId: mediaFoo._id,
+      author: userFoo._id,
+      text: 'abc',
+      timestamp: new Date()
+    });
+
+    Q.ninvoke(userFoo, 'save')
+      .then(function () {
+        return Q.ninvoke(albumFoo, 'save')
+      })
+      .then(function () {
+        return Q.ninvoke(mediaFoo, 'save')
+      })
+      .then(function () {
+        return Q.ninvoke(commentFoo, 'save')
+      })
+      .then(function () {
+        done();
       });
-      albumFoo.save(function () {
-        mediaFoo = new Media({
-          albumId: albumFoo._id,
-          name: 'foo.jpg  ',
-          addedOn: new Date(),
-          timestamp: new Date(),
-          mediaType: 'image'
-        });
-        mediaFoo.save(function() {
-          commentFoo = new Comment({
-            mediaId: mediaFoo._id,
-            author: userFoo._id,
-            text: 'abc',
-            timestamp: new Date()
-          });
-          commentFoo.save(function() {
-            done();
-          });
-        });
-      });
-    })
   });
 
   afterEach(function (done) {
