@@ -7,5 +7,6 @@ module.exports = {
   mongo: {
     uri: 'mongodb://localhost/seriousboomerang-test'
   },
+  seedDB: false,
   mediaDirectory: '/opt/serious-boomerang/'
 };
