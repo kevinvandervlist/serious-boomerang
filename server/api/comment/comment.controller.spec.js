@@ -78,8 +78,6 @@ describe('Comment controller', function () {
         code.should.be.exactly(201);
       });
   });
-  // Enabling these tests breaks other stuff.
-  return;
 
   it('should not be able to store a comment without a valid author reference', function (done) {
     ExpressControllerTester.doRequest(controller.newComment, done)
@@ -88,7 +86,7 @@ describe('Comment controller', function () {
         name: 'aueauo',
         email: 'aaueaoeu@b.c',
         password: 'aoeuaoueaouea',
-        _id: ''
+        _id: 'deadbeefca2ab77a3200000d'
       })
       .withParams({mediaId: mediaFoo._id})
       .withBody({text: 'this is my text'})
@@ -99,20 +97,9 @@ describe('Comment controller', function () {
   });
 
   it('should not be able to store a comment without a valid media reference', function (done) {
-    userFoo._id = '';
     ExpressControllerTester.doRequest(controller.newComment, done)
       .asUser(userFoo)
-      .withParams({mediaId: 'abc_invalid'})
-      .withBody({text: 'this is my text'})
-      .asResponse('json')
-      .withValidation(function(result, code) {
-        code.should.be.exactly(422);
-      });
-  });
-
-  it('should not be able to store a new comment without a registerd user', function (done) {
-    ExpressControllerTester.doRequest(controller.newComment, done)
-      .withParams({mediaId: mediaFoo._id})
+      .withParams({mediaId: 'deadbeefca2ab77a3200000d'})
       .withBody({text: 'this is my text'})
       .asResponse('json')
       .withValidation(function(result, code) {

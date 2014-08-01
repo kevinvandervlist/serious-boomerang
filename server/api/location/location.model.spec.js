@@ -1,6 +1,7 @@
 'use strict';
 
 var should = require('should');
+var Q = require('q');
 var Location = require('./location.model');
 
 var location;
@@ -23,8 +24,12 @@ describe('Location Model', function() {
   });
 
   afterEach(function(done) {
-    Location.remove().exec().then(function() {
+    Q.all([
+      Location.remove().exec()
+    ]).then(function() {
       done();
+    }, function(err) {
+      done(err);
     });
   });
 

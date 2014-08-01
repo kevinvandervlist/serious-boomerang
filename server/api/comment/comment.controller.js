@@ -28,7 +28,7 @@ exports.newComment = function (req, res) {
     text: req.body.text,
     timestamp: new Date()
   });
-  comment.save(function(err, user) {
+  comment.save(function(err) {
     if (err) { return res.json(422, err); }
     res.send(201);
   });
