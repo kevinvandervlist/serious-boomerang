@@ -17,6 +17,10 @@ angular.module('seriousBoomerangApp')
       humanReadableTimestamp: function(timestamp) {
         var d = new Date(timestamp);
         return d.toString();
+      },
+      humanReadableDate: function(date) {
+        var d = new Date(date);
+        return d.getDay() + '-' + d.getMonth() + '-' + d.getFullYear();
       }
     };
   });

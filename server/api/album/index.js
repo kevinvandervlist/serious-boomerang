@@ -8,6 +8,6 @@ var auth = require('../../auth/auth.service');
 var router = express.Router();
 
 router.get('/', auth.hasPermission(), controller.index);
-router.get('/:year/:name', auth.hasPermission(), controller.albumdetails);
+router.get('/:year/:name', auth.hasPermission(), controller.albumDetailsByYearName);
 
 module.exports = router;

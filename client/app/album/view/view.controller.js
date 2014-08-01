@@ -1,48 +1,31 @@
 'use strict';
 
-function humanReadableDate(date) {
-  var d = new Date(date);
-  return d.getDay() + '-' + d.getMonth() + '-' + d.getFullYear();
-}
-
-function getResourceObservable(rx, httpGetPromise) {
-    return rx.Observable
-        .fromPromise(httpGetPromise)
-        .map(function (response) {
-            return response.data;
-        });
-}
-
-function getResourceListObservable(rx, httpGetPromise) {
-    return getResourceObservable(rx, httpGetPromise)
-        .flatMap(rx.Observable.fromArray);
-}
-
-function getAlbumDetails(rx, $q, $http, albumDetailsPromise, deferredMediaDetails) {
+function getAlbumDetails(RXUtils, $q, $http, util, URLFactory, albumDetailsPromise, deferredMediaDetails) {
   var deferredAlbum = $q.defer();
 
-  getResourceObservable(rx, albumDetailsPromise)
+  RXUtils.observableResource(albumDetailsPromise)
     .subscribe(function (album) {
-      $http.get('/api/media/' + album._id).
+      $http.get(URLFactory.getMediaByAlbumId(album._id)).
         then(function (result) {
           deferredMediaDetails.resolve(result);
         });
 
-      album.startDateStr = humanReadableDate(album.startDate);
-      album.endDateStr = humanReadableDate(album.startDate);
+      album.startDateStr = util.humanReadableDate(album.startDate);
+      album.endDateStr = util.humanReadableDate(album.startDate);
+
       deferredAlbum.resolve(album);
     });
 
   return deferredAlbum.promise;
 }
 
-function getMediaLinksObservable(rx, mediaObservable, token) {
+function getMediaLinksObservable(rx, URLFactory, mediaObservable, token) {
   var images = mediaObservable
     .filter(function(media) {
       return media.mediaType === 'image';
     })
     .map(function(media) {
-      media.url = '/api/media/' + media.albumId + '/' + media._id + '/jpg/retrieve/' + token + '/';
+      media.url = URLFactory.getBaseMediaURLBy(media.albumId, media._id, 'jpg', token);
       return media;
   });
 
@@ -52,8 +35,8 @@ function getMediaLinksObservable(rx, mediaObservable, token) {
     })
     .map(function(media) {
       media.url = {};
-      media.url.webm = '/api/media/' + media.albumId + '/' + media._id + '/webm/retrieve/' + token + '/';
-      media.url.mp4 = '/api/media/' + media.albumId + '/' + media._id + '/mp4/retrieve/' + token + '/';
+      media.url.webm = URLFactory.getBaseMediaURLBy(media.albumId, media._id, 'webm', token);
+      media.url.mp4 = URLFactory.getBaseMediaURLBy(media.albumId, media._id, 'mp4', token);
       return media;
     });
 
@@ -63,12 +46,11 @@ function getMediaLinksObservable(rx, mediaObservable, token) {
   );
 }
 
-function retrieveComments(rx, $http, $scope, mediaId) {
+function retrieveComments(RXUtils, $http, URLFactory, $scope, mediaId) {
   $scope.comments = [];
-  getResourceListObservable(rx, $http.get('/api/comment/' + mediaId))
+  RXUtils.observableResourceList($http.get(URLFactory.getCommentsBy(mediaId)))
     .flatMap(function(comment) {
-      return getResourceObservable(rx, $http.get('/api/users/' + comment.author))
-        .take(1)
+      return RXUtils.observableResource($http.get(URLFactory.getUserBy(comment.author)))
         .map(function(user) {
           comment.author = user;
           return comment;
@@ -79,8 +61,8 @@ function retrieveComments(rx, $http, $scope, mediaId) {
     });
 }
 
-function configureDetailedMediaView(rx, $http, $scope) {
-  retrieveComments(rx, $http, $scope, $scope.selectedMedia._id);
+function configureDetailedMediaView(RXUtils, $http, URLFactory, $scope) {
+  retrieveComments(RXUtils, $http, URLFactory, $scope, $scope.selectedMedia._id);
 
   var videos = document.getElementsByTagName('video');
 
@@ -93,7 +75,7 @@ function configureDetailedMediaView(rx, $http, $scope) {
 }
 
 angular.module('seriousBoomerangApp')
-  .controller('AlbumViewCtrl', function ($scope, $stateParams, $http, $q, HtmlUtilities, rx, authInterceptor) {
+  .controller('AlbumViewCtrl', function ($scope, $stateParams, $http, $q, URLFactory, HtmlUtilities, rx, RXUtils, authInterceptor) {
     var token = authInterceptor.token();
     var numberOfMediaFiles = -1;
 
@@ -121,7 +103,7 @@ angular.module('seriousBoomerangApp')
         $scope.selectedMedia = $scope.media[id];
         $scope.prevMediaID = id - 1;
         $scope.nextMediaID = id + 1;
-        configureDetailedMediaView(rx, $http, $scope);
+        configureDetailedMediaView(RXUtils, $http, URLFactory, $scope);
       }
     };
 
@@ -129,29 +111,29 @@ angular.module('seriousBoomerangApp')
       return $scope.selectedMedia === undefined;
     };
 
-    $scope.saveComment = function() {
-      $http.post('/api/comment/' + $scope.selectedMedia._id, $scope.comment)
+    $scope.saveCommentById = function() {
+      $http.post(URLFactory.saveCommentById($scope.selectedMedia._id), $scope.comment)
         .success(function(data, status) {
           if(status === 201) {
-            configureDetailedMediaView(rx, $http, $scope);
+            configureDetailedMediaView(RXUtils, $http, URLFactory, $scope);
             $scope.comment = {};
           } else {
             $scope.comment.error = 'Helaas, er is iets fout gegaan: ' + data;
           }
-      })
+      });
     };
 
-    var albumDetails = $http.get('/api/album/' + $stateParams.year + '/' + $stateParams.name);
+    var albumDetails = $http.get(URLFactory.getAlbumByYearName($stateParams.year, $stateParams.name));
     var deferredMediaDetails = $q.defer();
 
-    var albumPromise = getAlbumDetails(rx, $q, $http, albumDetails, deferredMediaDetails);
-    var mediaObservable = getResourceListObservable(rx, deferredMediaDetails.promise);
+    var albumPromise = getAlbumDetails(RXUtils, $q, $http, HtmlUtilities, URLFactory, albumDetails, deferredMediaDetails);
+    var mediaObservable = RXUtils.observableResourceList(deferredMediaDetails.promise);
 
     albumPromise.then(function (album) {
       $scope.album = album;
     });
 
-    getMediaLinksObservable(rx, mediaObservable, token)
+    getMediaLinksObservable(rx, URLFactory, mediaObservable, token)
       .subscribe(function (media) {
         $scope.media.push(media);
       }, function() {}, function() {

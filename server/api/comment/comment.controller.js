@@ -33,3 +33,10 @@ exports.newComment = function (req, res) {
     res.send(201);
   });
 };
+
+exports.latestComments = function(req, res) {
+  Comment.find({}).sort('-timestamp').limit(req.params.amount).exec(function(err, comments) {
+    if (err) return res.send(500, err);
+    res.json(200, comments);
+  });
+};

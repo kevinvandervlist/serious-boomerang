@@ -17,7 +17,7 @@ exports.index = function (req, res) {
 /**
  * Get the details of an album.
  */
-exports.albumdetails = function (req, res) {
+exports.albumDetailsByYearName = function (req, res) {
   var year = req.params.year;
   var name = req.params.name;
 
@@ -36,4 +36,3 @@ exports.albumdetails = function (req, res) {
     res.json(album);
   });
 };
-
