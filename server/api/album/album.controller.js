@@ -3,14 +3,21 @@
 var Album = require('./album.model');
 var passport = require('passport');
 var config = require('../../config/environment');
+var permissionVerifier = require('../permission/permission.verifier');
 
 /**
  * Get list of albums
  */
 exports.index = function (req, res) {
-  Album.find({}, function (err, albums) {
-    if (err) return res.send(500, err);
+  var ids = permissionVerifier.allowedAlbumIdsByUserId(req.user._id);
+  ids.then(function(allowedIds) {
+    return Album.find({})
+      .where('myid').in(allowedIds)
+      .exec();
+  }).then(function(albums) {
     res.json(200, albums);
+  }, function(err) {
+    return res.send(500, err);
   });
 };
 

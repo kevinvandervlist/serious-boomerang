@@ -10,7 +10,12 @@ var Thing = require('../api/thing/thing.model');
 var User = require('../api/user/user.model');
 var Album = require('../api/album/album.model');
 var Media = require('../api/media/media.model');
+var AlbumPermission = require('../api/permission/album.permission.model');
 var Comment = require('../api/comment/comment.model');
+
+function getId(target, query) {
+  return target.findOne(query).exec();
+}
 
 var things = Thing.find({})
   .remove()
@@ -921,6 +926,50 @@ Q.all([
   users,
   albums
 ]).then(function() {
+  return getId(User, {name: 'usera'})
+    .then(function(user) {
+      return getId(Album, { name: 'Foo'})
+        .then(function(album) {
+          return AlbumPermission.create({
+              appliedAlbumId: album._id,
+            referencedUserId: user._id
+          });
+        })
+    });
+}).then(function() {
+  return getId(User, {name: 'Admin'})
+    .then(function(user) {
+      return getId(Album, { name: 'Foo'})
+        .then(function(album) {
+          return AlbumPermission.create({
+            appliedAlbumId: album._id,
+            referencedUserId: user._id
+          });
+        })
+    });
+}).then(function() {
+  return getId(User, {name: 'Admin'})
+    .then(function(user) {
+      return getId(Album, { name: 'Bar'})
+        .then(function(album) {
+          return AlbumPermission.create({
+            appliedAlbumId: album._id,
+            referencedUserId: user._id
+          });
+        })
+    });
+}).then(function() {
+  return getId(User, {name: 'Admin'})
+    .then(function(user) {
+      return getId(Album, { name: 'Baz'})
+        .then(function(album) {
+          return AlbumPermission.create({
+            appliedAlbumId: album._id,
+            referencedUserId: user._id
+          });
+        })
+    });
+}).then(function() {
   console.log('Seeding completed.');
 }, function(err) {
   console.error('An error occurred while seeding the project!');

@@ -24,6 +24,7 @@
     "passport": "~0.2.0",
     "passport-local": "~0.1.6",
     "q": "^1.0.1",
+    "rx": "^2.3.1",
     "socket.io": "~0.9.16",
     "socketio-jwt": "^2.0.2",
     "static-favicon": "~1.0.1"

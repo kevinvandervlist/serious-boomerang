@@ -7,6 +7,7 @@ var jwt = require('jsonwebtoken');
 var expressJwt = require('express-jwt');
 var compose = require('composable-middleware');
 var User = require('../api/user/user.model');
+var PermissionVerifier = require('../api/permission/permission.verifier');
 var validateJwt = expressJwt({ secret: config.secrets.session });
 
 /**
@@ -37,12 +38,38 @@ function isAuthenticated() {
     });
 }
 
+function verifyAccessForRequestedResource(req) {
+  var userId = req.user._id;
+  if(req.params.mediaId) {
+    console.log('user + mediaid');
+    return PermissionVerifier.userHasPermissionForMedia(userId, req.params.mediaId);
+  } else if (req.params.albumId) {
+    console.log('user + albumid');
+    return PermissionVerifier.userHasPermissionForAlbum(userId, req.params.albumId);
+  } else {
+    return PermissionVerifier.accessGranted();
+  }
+}
+
 /**
  * Attaches the user object to the request if the user has permission to use the given resource.
  * Otherwise returns 403
  */
 function hasPermission() {
-  return isAuthenticated();
+  return compose()
+    .use(isAuthenticated())
+    .use(function hasPermissionForResource(req, res, next) {
+      var promise = verifyAccessForRequestedResource(req);
+      promise.then(function(result) {
+        if(result.access) {
+          next();
+        } else {
+          res.send(403);
+        }
+      }, function() {
+        res.send(403);
+      });
+    });
 }
 
 /**

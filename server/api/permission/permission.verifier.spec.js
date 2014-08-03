@@ -3,11 +3,12 @@
 var should = require('should');
 var Q = require('q');
 var AlbumPermission = require('./album.permission.model');
+var Media = require('../media/media.model');
 var User = require('../user/user.model');
 var Album = require('../album/album.model');
 var verifier = require('./permission.verifier');
 
-var album, userA, userB;
+var album, userA, userB, media;
 
 describe('Permission Verifier', function () {
   beforeEach(function (done) {
@@ -34,7 +35,16 @@ describe('Permission Verifier', function () {
       Q.ninvoke(album, 'save'),
       Q.ninvoke(userA, 'save'),
       Q.ninvoke(userB, 'save')
-    ]).then(function () {
+    ]).then(function() {
+      media = new Media({
+        albumId: album._id,
+        name: 'foo.jpg  ',
+        addedOn: new Date(),
+        timestamp: new Date(),
+        mediaType: 'image'
+      });
+      return Q.ninvoke(media, 'save');
+    }).then(function () {
       done();
     }, function (err) {
       done(err);
@@ -44,6 +54,7 @@ describe('Permission Verifier', function () {
   afterEach(function (done) {
     Q.all([
       AlbumPermission.remove().exec(),
+      Media.remove().exec(),
       User.remove().exec(),
       Album.remove().exec()
     ]).then(function () {
@@ -165,6 +176,66 @@ describe('Permission Verifier', function () {
               done(err);
             });
           });
+      });
+  });
+
+  it('User A should have access to the media file, user B should not', function (done) {
+    new AlbumPermission({
+      appliedAlbumId: album._id,
+      referencedUserId: userA._id
+    }).save(function () {
+        var permissionA = verifier.userHasPermissionForMedia(userA._id, media._id);
+        var resultA = permissionA.then(function (result) {
+          should(result.access).equal(true);
+        }, function (err) {
+          done(err);
+        });
+
+        var permissionB = verifier.userHasPermissionForMedia(userB._id, media._id);
+        var resultB = permissionB.then(function (result) {
+          should(result.access).equal(false);
+        }, function (err) {
+          done(err);
+        });
+
+        Q.all([
+          resultA,
+          resultB
+        ]).then(function () {
+          done();
+        }, function (err) {
+          done(err);
+        });
+      });
+  });
+
+  it('Should list an album for user A, but not for B', function(done) {
+    new AlbumPermission({
+      appliedAlbumId: album._id,
+      referencedUserId: userA._id
+    }).save(function () {
+        var idsA = verifier.allowedAlbumIdsByUserId(userA._id);
+        var resultA = idsA.then(function (result) {
+          result.should.have.length(1);
+        }, function (err) {
+          done(err);
+        });
+
+        var idsB = verifier.allowedAlbumIdsByUserId(userB._id);
+        var resultB = idsB.then(function (result) {
+          result.should.have.length(0);
+        }, function (err) {
+          done(err);
+        });
+
+        Q.all([
+          resultA,
+          resultB
+        ]).then(function () {
+          done();
+        }, function (err) {
+          done(err);
+        });
       });
   });
 });
