@@ -5,7 +5,7 @@
     <div class="col-lg-12">
       <h1 class="header">Laatste {{ comments.length }} reacties:</h1>
       <div class="row comments">
-        <div class="col-xs-12 col-centered comment" ng-repeat="c in comments" ng-class-odd="'oddcomment'" ng-class-even="'evencomment'">
+        <div class="col-centered comment" ng-repeat="c in comments" ng-class-odd="'oddcomment'" ng-class-even="'evencomment'">
           <div class="commentheader">
             Geplaatst door <span class="commentauthor">{{ c.author.name }}</span> op <span class="commenttimestamp">{{ util.humanReadableTimestamp(c.timestamp) }}</span>
           </div>

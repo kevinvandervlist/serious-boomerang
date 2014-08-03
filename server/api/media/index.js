@@ -7,10 +7,6 @@ var auth = require('../../auth/auth.service');
 
 var router = express.Router();
 
-function test() {
-  console.log(arguments);
-}
-
 router.get('/:albumId', auth.hasPermission(), controller.index);
 router.get('/:albumId/:mediaId/describe', auth.hasPermission(), controller.describeSingleFile);
 router.get('/:albumId/:mediaId/:format/retrieve/:access_token/:size?', auth.hasPermission(), controller.getSingleFile);
