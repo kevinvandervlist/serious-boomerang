@@ -12,7 +12,7 @@ exports.index = function (req, res) {
   var ids = permissionVerifier.allowedAlbumIdsByUserId(req.user._id);
   ids.then(function(allowedIds) {
     return Album.find({})
-      .where('myid').in(allowedIds)
+      .where('_id').in(allowedIds)
       .exec();
   }).then(function(albums) {
     res.json(200, albums);

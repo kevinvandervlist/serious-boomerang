@@ -41,10 +41,8 @@ function isAuthenticated() {
 function verifyAccessForRequestedResource(req) {
   var userId = req.user._id;
   if(req.params.mediaId) {
-    console.log('user + mediaid');
     return PermissionVerifier.userHasPermissionForMedia(userId, req.params.mediaId);
   } else if (req.params.albumId) {
-    console.log('user + albumid');
     return PermissionVerifier.userHasPermissionForAlbum(userId, req.params.albumId);
   } else {
     return PermissionVerifier.accessGranted();
