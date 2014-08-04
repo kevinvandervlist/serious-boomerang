@@ -1,27 +1,15 @@
 'use strict';
 
 angular.module('seriousBoomerangApp')
-  .controller('AlbumListCtrl', function ($scope, $http) {
-    var rx = Rx; // jshint ignore:line
+  .controller('AlbumListCtrl', function ($scope, $http, AlbumGrouper) {
     $scope.albums = [];
 
-    var deferred = $http.get('/api/album');
-
-    rx.Observable
-      .fromPromise(deferred)
-      .map(function(response){
-        return response.data;
-      })
-      .flatMap(rx.Observable.fromArray)
-      .groupBy(function(album) {
-        return new Date(album.startDate).getFullYear();
-      })
+    AlbumGrouper.groupByYear($http.get('/api/album'))
       .subscribe(function(groupedObservable) {
         var group = {
           key: groupedObservable.key,
           albums: []
         };
-
         $scope.albums.push(group);
 
         groupedObservable.subscribe(function(album) {

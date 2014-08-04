@@ -83,4 +83,12 @@ describe('Album Controller', function () {
       });
   });
 
+  it('Everyone should see all albums in admin mode.', function (done) {
+    ExpressControllerTester.doRequest(controller.all, done)
+      .asResponse('json')
+      .withValidation(function (result, code) {
+        code.should.be.exactly(200);
+        result.should.have.length(1);
+      });
+  });
 });

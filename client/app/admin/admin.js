@@ -17,5 +17,10 @@ angular.module('seriousBoomerangApp')
         url: '/admin/modifyuser',
         templateUrl: 'app/admin/modifyuser/modifyuser.html',
         controller: 'modifyUserCtrl'
+      })
+      .state('albumpermissions', {
+        url: '/admin/albumpermissions',
+        templateUrl: 'app/admin/albumpermissions/albumpermissions.html',
+        controller: 'albumPermissionsCtrl'
       });
   });

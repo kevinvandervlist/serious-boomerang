@@ -6,7 +6,7 @@ var config = require('../../config/environment');
 var permissionVerifier = require('../permission/permission.verifier');
 
 /**
- * Get list of albums
+ * Get list of allowed albums
  */
 exports.index = function (req, res) {
   var ids = permissionVerifier.allowedAlbumIdsByUserId(req.user._id);
@@ -19,6 +19,20 @@ exports.index = function (req, res) {
   }, function(err) {
     return res.send(500, err);
   });
+};
+
+/**
+ * Get list of albums
+ */
+exports.all = function (req, res) {
+  Album
+    .find({})
+    .exec()
+    .then(function(albums) {
+      res.json(200, albums);
+    }, function(err) {
+      return res.send(500, err);
+    });
 };
 
 /**
