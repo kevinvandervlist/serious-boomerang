@@ -2,6 +2,7 @@ language: node_js
 node_js:
   - '0.10'
 before_script:
+  - 'cp server/config/local.env.js.template server/config/local.env.js'
   - 'npm install -g bower grunt-cli'
   - 'bower install'
 services: mongodb
