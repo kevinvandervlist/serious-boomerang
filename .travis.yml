@@ -12,6 +12,8 @@ after_success:
   - echo -n $id_rsa_{1..23} >> ~/.ssh/travis_rsa_64
   - base64 --decode --ignore-garbage ~/.ssh/travis_rsa_64 > ~/.ssh/id_rsa
   - chmod 600 ~/.ssh/id_rsa
+  - shopt -s extglob
+  - rm -rf dist/public/bower_components/!(*rxjs)
   - scp -o StrictHostKeyChecking=no -r dist seriousboomerang@ziekezooi.nl:/opt/serious-boomerang/new
   - ssh -o StrictHostKeyChecking=no seriousboomerang@ziekezooi.nl "cd /opt/serious-boomerang/new; npm install --production; touch .complete"
 
