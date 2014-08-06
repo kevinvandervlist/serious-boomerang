@@ -8,6 +8,9 @@ Copy the environment template:
 cp server/config/local.env.js.template server/config/local.env.js
 ```
 
+# CD
+Builds that pass Travis will automatically be deployed. TODO: The script.
+
 # Protractor:
 npm run update-webdriver
 
