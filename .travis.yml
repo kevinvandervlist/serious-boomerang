@@ -8,10 +8,11 @@ before_script:
   - 'bower install'
 services: mongodb
 after_success:
+  - grunt build
   - echo -n $id_rsa_{1..23} >> ~/.ssh/travis_rsa_64
   - base64 --decode --ignore-garbage ~/.ssh/travis_rsa_64 > ~/.ssh/id_rsa
   - chmod 600 ~/.ssh/id_rsa
-  - ssh -o StrictHostKeyChecking=no seriousboomerang@ziekezooi.nl "deploy -b $TRAVIS_BRANCH -c $TRAVIS_COMMIT --repoDir /opt/seriousboomerang/gitrepo/ --deployDir /opt/seriousboomerang/app/"
+  - ssh -o StrictHostKeyChecking=no seriousboomerang@ziekezooi.nl "deploy -b $TRAVIS_BRANCH -c $TRAVIS_COMMIT --repoDir /opt/serious-boomerang/gitrepo/ --deployDir /opt/serious-boomerang/app/"
 env:
   global:
   - secure: JSlUWRdWEndMwogEJaagkKe2J4OUvFiHFS7cgwo8bzDgJEosVY1dV9yqkIT6vtCWAUagjGeoeewesHJwsFBjP00lCzDmdfeD1XcnUYX5SDcZytP1Lb51RBRnT/Up1SX4O+XCdYrAJ9cuibE49B61QIHBHozh1KOvGwRU7QKiLK0=
