@@ -8,12 +8,12 @@ before_script:
   - 'bower install'
 services: mongodb
 after_success:
-  - grunt build
+  - grunt build:prod
   - echo -n $id_rsa_{1..23} >> ~/.ssh/travis_rsa_64
   - base64 --decode --ignore-garbage ~/.ssh/travis_rsa_64 > ~/.ssh/id_rsa
   - chmod 600 ~/.ssh/id_rsa
   - scp -o StrictHostKeyChecking=no -r dist seriousboomerang@ziekezooi.nl:/opt/serious-boomerang/new
-  - ssh -o StrictHostKeyChecking=no seriousboomerang@ziekezooi.nl "cd /opt/serious-boomerang/new; npm install --production"
+  - ssh -o StrictHostKeyChecking=no seriousboomerang@ziekezooi.nl "cd /opt/serious-boomerang/new; npm install --production; touch .complete"
 
 env:
   global:
