@@ -2,7 +2,10 @@ language: node_js
 node_js:
   - '0.10'
 before_script:
+  - echo -e "Host ziekezooi.nl\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
   - 'cp server/config/local.env.js.template server/config/local.env.js'
   - 'npm install -g bower grunt-cli'
   - 'bower install'
 services: mongodb
+after_success:
+  - ssh -o StrictHostKeyChecking=no seriousboomerang@ziekezooi.nl "deploy -b $TRAVIS_BRANCH -c $TRAVIS_COMMIT --repoDir /opt/seriousboomerang/gitrepo/ --deployDir /opt/seriousboomerang/app/"

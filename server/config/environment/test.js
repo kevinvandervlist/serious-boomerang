@@ -8,5 +8,5 @@ module.exports = {
     uri: 'mongodb://localhost/seriousboomerang-test'
   },
   seedDB: false,
-  mediaDirectory: '/opt/serious-boomerang/'
+  mediaDirectory: '/opt/serious-boomerang/data/'
 };
