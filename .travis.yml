@@ -1,12 +1,16 @@
 language: node_js
+
 node_js:
   - '0.10'
+
 before_script:
   - echo -e "Host ziekezooi.nl\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
   - 'cp server/config/local.env.js.template server/config/local.env.js'
   - 'npm install -g bower grunt-cli'
   - 'bower install'
+
 services: mongodb
+
 after_success:
   - grunt build:prod
   - echo -n $id_rsa_{1..23} >> ~/.ssh/travis_rsa_64
@@ -15,7 +19,9 @@ after_success:
   - shopt -s extglob
   - rm -rf dist/public/bower_components/!(*rxjs)
   - scp -o StrictHostKeyChecking=no -r dist seriousboomerang@ziekezooi.nl:/opt/serious-boomerang/new
+  - scp -o StrictHostKeyChecking=no start_at_server.sh seriousboomerang@ziekezooi.nl:/opt/serious-boomerang/new/.
   - ssh -o StrictHostKeyChecking=no seriousboomerang@ziekezooi.nl "cd /opt/serious-boomerang/new; npm install --production; touch .complete"
+	- ssh -o StrictHostKeyChecking=no seriousboomerang@ziekezooi.nl "cd /opt/serious-boomerang; new/start_at_server.sh"
 
 env:
   global:
