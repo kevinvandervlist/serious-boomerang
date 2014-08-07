@@ -21,7 +21,7 @@ after_success:
   - scp -o StrictHostKeyChecking=no -r dist seriousboomerang@ziekezooi.nl:/opt/serious-boomerang/new
   - scp -o StrictHostKeyChecking=no start_at_server.sh seriousboomerang@ziekezooi.nl:/opt/serious-boomerang/new/.
   - ssh -o StrictHostKeyChecking=no seriousboomerang@ziekezooi.nl "cd /opt/serious-boomerang/new; npm install --production; touch .complete"
-	- ssh -o StrictHostKeyChecking=no seriousboomerang@ziekezooi.nl "cd /opt/serious-boomerang; new/start_at_server.sh"
+  - ssh -o StrictHostKeyChecking=no seriousboomerang@ziekezooi.nl "cd /opt/serious-boomerang; new/start_at_server.sh"
 
 env:
   global:
