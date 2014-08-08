@@ -86,7 +86,7 @@ function makeH264(original, destination, width, deferredResult) {
 }
 
 function resizeImage(original, destination, format, width, deferredResult) {
-  mkdirForFileIfNotExists(destination, defferedResult);
+  mkdirForFileIfNotExists(destination, deferredResult);
 
   gm(original)
     .resize(width)
