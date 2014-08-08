@@ -9,6 +9,9 @@ angular.module('seriousBoomerangApp')
       getAlbumByYearName: function(year, name) {
         return '/api/album/' + year + '/' + name;
       },
+      getAllAlbums: function() {
+        return '/api/album/all';
+      },
       getMediaByAlbumId: function(albumId) {
         return '/api/media/' + albumId;
       },
@@ -23,6 +26,18 @@ angular.module('seriousBoomerangApp')
       },
       getLatestComments: function(amount) {
         return '/api/comment/latest/' + amount;
+      },
+      getAllUsers: function() {
+        return '/api/users/';
+      },
+      getAllAlbumPermissions: function() {
+        return '/api/permission/album/list';
+      },
+      storeNewAlbumPermission: function() {
+        return '/api/permission/album/add';
+      },
+      deleteExistingAlbumPermission: function(albumId, userId) {
+        return '/api/permission/album/' + albumId + '/' + userId;
       }
     };
   });

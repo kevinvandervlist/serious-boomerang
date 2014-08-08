@@ -14,6 +14,7 @@ module.exports = function(app) {
   app.use('/api/media', require('./api/media'));
   app.use('/api/comment', require('./api/comment'));
   app.use('/api/users', require('./api/user'));
+  app.use('/api/permission/', require('./api/permission'));
 
   app.use('/auth', require('./auth'));
 

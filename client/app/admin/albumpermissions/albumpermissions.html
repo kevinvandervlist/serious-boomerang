@@ -13,8 +13,13 @@
           <ul class="nav nav-stacked col-lg-4" ng-repeat="album in _set.albums | orderBy:'name'">
             <li class="album">{{ album.name }}: {{ album.description }}</li>
             <li>
-              <ul class="nav nav-stacked col-lg-4" ng-repeat="user in users | orderBy:'name'">
-                <li><input type="checkbox" ng-model="checkboxValues[album._id][user._id]" ng-change="togglePermission(album._id, user._id)"> {{ user.name }}</li>
+              <ul class="nav nav-stacked col-lg-8" ng-repeat="user in users | orderBy:'name'">
+                <li ng-if="checkboxValues[album._id + '-' + user._id]">
+                  <input type="checkbox" checked ng-click="togglePermission(album._id, user._id, $event)">{{ user.name }}
+                </li>
+                <li ng-if="!checkboxValues[album._id + '-' + user._id]">
+                  <input type="checkbox" ng-click="togglePermission(album._id, user._id, $event)">{{ user.name }}
+                </li>
               </ul>
             </li>
           </ul>

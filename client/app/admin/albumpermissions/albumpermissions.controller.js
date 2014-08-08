@@ -1,21 +1,39 @@
 'use strict';
 
-function hasPermission(albumId, userId) {
-  console.log(albumId + '-' + userId);
-  return true;
-}
-
 angular.module('seriousBoomerangApp')
-  .controller('albumPermissionsCtrl', function ($scope, $http, AlbumGrouper, rx, RXUtils) {
+  .controller('albumPermissionsCtrl', function ($scope, $http, AlbumGrouper, rx, RXUtils, URLFactory) {
     $scope.albums = [];
     $scope.users = [];
+    $scope.permissions = [];
     $scope.checkboxValues = {};
 
-    $scope.togglePermission = function(albumId, userId) {
-      console.log('Toggling user id ' + userId + ' to album id ' + albumId + '.');
+    var albums = AlbumGrouper.groupByYear($http.get(URLFactory.getAllAlbums()));
+    var users = RXUtils.observableResourceList($http.get(URLFactory.getAllUsers()));
+    var permissions = RXUtils.observableResourceList($http.get(URLFactory.getAllAlbumPermissions()));
+
+    $scope.togglePermission = function(albumId, userId, $event) {
+      var action;
+      var permission = {
+        appliedAlbumId: albumId,
+        referencedUserId: userId
+      };
+
+      if($event.target.checked) {
+        action = $http.post(URLFactory.storeNewAlbumPermission(), permission);
+      } else {
+        action = $http.delete(URLFactory.deleteExistingAlbumPermission(albumId, userId));
+      }
+
+      action
+        .success(function(data, status) {
+          if(status === 200) {
+            console.log('Success');
+          } else {
+            console.error('failure');
+          }
+        });
     };
 
-    var albums = AlbumGrouper.groupByYear($http.get('/api/album/all'));
     albums
       .subscribe(function(groupedObservable) {
         var group = {
@@ -29,11 +47,13 @@ angular.module('seriousBoomerangApp')
         });
       });
 
-    var users = RXUtils.observableResourceList($http.get('/api/users/'));
     users.subscribe(function(user) {
       $scope.users.push(user);
     });
 
+    permissions.subscribe(function(permission) {
+      $scope.permissions.push(permission);
+    });
 
     albums
       .flatMap(function(group) {
@@ -44,10 +64,14 @@ angular.module('seriousBoomerangApp')
           .map(function(user) {
             return {album: album, user: user};
           });
-      }).subscribe(function(x) {
-        if(! $scope.checkboxValues.hasOwnProperty(x.album._id)) {
-          $scope.checkboxValues[x.album._id] = {};
-        }
-        $scope.checkboxValues[x.album._id][x.user._id] = hasPermission(x.album._id, x.user._id);
+      }).subscribe(function(tuple) {
+        $scope.checkboxValues[tuple.album._id + '-' + tuple.user._id] = false;
+      }, function(err) {
+        console.error(err);
+      }, function() {
+        permissions
+          .subscribe(function(perm) {
+            $scope.checkboxValues[perm.appliedAlbumId + '-' + perm.referencedUserId] = true;
+          });
       });
   });
