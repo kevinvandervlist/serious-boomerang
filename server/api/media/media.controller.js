@@ -31,6 +31,8 @@ exports.describeSingleFile = function (req, res) {
     albumId: req.params.albumId
   }).then(function(value) {
     res.json(200, value);
+  }, function(err) {
+    res.send(404, err);
   });
 };
 

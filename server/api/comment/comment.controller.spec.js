@@ -35,6 +35,7 @@ describe('Comment controller', function () {
     });
     commentFoo = new Comment({
       mediaId: mediaFoo._id,
+      albumId: albumFoo._id,
       author: userFoo._id,
       text: 'abc',
       timestamp: new Date()

@@ -153,6 +153,7 @@ Q.all([
           .then(function(user) {
             return Comment.create({
               mediaId: media._id,
+              albumId: media.albumId,
               author: user._id,
               text: 'A first comment',
               timestamp: new Date()
@@ -164,6 +165,7 @@ Q.all([
           .then(function(user) {
             return Comment.create({
               mediaId: media._id,
+              albumId: media.albumId,
               author: user._id,
               text: 'A second comment',
               timestamp: new Date()

@@ -18,6 +18,8 @@ exports.getAsPromiseOne = function (model, constraint) {
   model.findOne(constraint, function(err, result) {
     if (err) {
       defer.reject(err);
+    } else if(result === null) {
+      defer.reject(err);
     }
     defer.resolve(result);
   });

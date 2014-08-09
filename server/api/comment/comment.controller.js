@@ -2,6 +2,8 @@
 
 var Comment = require('./comment.model');
 var passport = require('passport');
+var modelUtils = require('../../util/ModelUtils');
+var Media = require('../media/media.model');
 var config = require('../../config/environment');
 
 exports.allComments = function (req, res) {
@@ -18,19 +20,29 @@ exports.commentsByMediaId = function (req, res) {
   });
 };
 
-/**
-* Creates a new comment
-*/
 exports.newComment = function (req, res) {
-  var comment = new Comment({
-    mediaId: req.params.mediaId,
-    author: req.user._id,
-    text: req.body.text,
-    timestamp: new Date()
-  });
-  comment.save(function(err) {
-    if (err) { return res.json(422, err); }
-    res.send(201);
+  function error(err) {
+    return res.json(422, err);
+  }
+  var mediaPromise = modelUtils
+    .getAsPromiseOne(Media, {
+      _id: req.params.mediaId
+    });
+
+  mediaPromise.then(function(media) {
+    var comment = new Comment({
+      mediaId: req.params.mediaId,
+      albumId: media.albumId,
+      author: req.user._id,
+      text: req.body.text,
+      timestamp: new Date()
+    });
+    comment.save(function(err) {
+      if (err) { return error(err) }
+      res.send(201);
+    });
+  }, function(err) {
+    return error(err);
   });
 };
 

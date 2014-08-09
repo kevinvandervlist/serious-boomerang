@@ -14,6 +14,7 @@ var userFoo;
 function createComment(_text, _date) {
   return new Comment({
     mediaId: mediaFoo._id,
+    albumId: albumFoo._id,
     author: userFoo._id,
     text: _text,
     timestamp: _date

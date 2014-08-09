@@ -99,10 +99,10 @@ describe('Media controller', function () {
         albumId: albumFoo._id,
         mediaId: albumFoo._id
       })
-      .asResponse('json')
+      .asResponse('send')
       .withValidation(function(result, code) {
-        code.should.be.exactly(200);
-        should.not.exist(result);
+        code.should.be.exactly(404);
+        (result === null).should.be.true;
       });
   });
 

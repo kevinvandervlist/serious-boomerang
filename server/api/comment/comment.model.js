@@ -3,11 +3,17 @@
 var mongoose = require('mongoose');
 var Media = require('../media/media.model');
 var User = require('../user/user.model');
+var Album = require('../album/album.model');
 var Schema = mongoose.Schema;
 
 var CommentSchema = new Schema({
   mediaId: {
     type: String,
+    trim: true,
+    required: true
+  },
+  albumId: {
+    type: Schema.Types.ObjectId,
     trim: true,
     required: true
   },
@@ -43,6 +49,23 @@ CommentSchema
       return respond(album !== null);
     });
   }, 'The referenced media file should exist.');
+
+CommentSchema
+  .path('albumId')
+  .validate(function (v) {
+    return v.length;
+  }, 'albumId name cannot be blank');
+
+CommentSchema
+  .path('albumId')
+  .validate(function (v, respond) {
+    Album.findOne({
+      _id: v
+    }, function (err, album) {
+      if (err) throw err;
+      return respond(album !== null);
+    });
+  }, 'The referenced album should exist.');
 
 CommentSchema
   .path('author')
