@@ -17,6 +17,9 @@ npm run update-webdriver
 # Data dir:
 Zie de environment settings. Wordt gebruikt voor media.
 
+# External bugs:
+ng-flow requires flow.js, which breaks the grunt build:prod task. It can be fixed by changing the dependency 'flow.js' of ng-flow to 'flowjs'. Then, rename the flow.js project to flowjs as well, and you're done.
+
 # Optional process limit @ server
 ```bash
 [root@isis /home/kevin]# cat /etc/security/limits.conf |grep serious

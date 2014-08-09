@@ -11,6 +11,7 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
+      'client/bower_components/flowjs/dist/flow.js',
       'client/bower_components/rxjs/phantomjs.backfill.js',
       'client/bower_components/rxjs/rx.all.js',
       'client/bower_components/jquery/dist/jquery.js',
@@ -21,6 +22,7 @@ module.exports = function(config) {
       'client/bower_components/angular-sanitize/angular-sanitize.js',
       'client/bower_components/angular-route/angular-route.js',
       'client/bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
+      'client/bower_components/ng-flow/dist/ng-flow.js',
       'client/bower_components/lodash/dist/lodash.compat.js',
       'client/bower_components/angular-ui-router/release/angular-ui-router.js',
       'client/app/app.js',

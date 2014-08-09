@@ -11,6 +11,6 @@ angular.module('seriousBoomerangApp')
       .state('uploadview', {
         url: '/upload/:year/:name',
         templateUrl: 'app/upload/upload/upload.html',
-        controller: 'AlbumViewCtrl'
+        controller: 'UploadCtrl'
       });
   });
