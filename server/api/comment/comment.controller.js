@@ -4,12 +4,19 @@ var Comment = require('./comment.model');
 var passport = require('passport');
 var modelUtils = require('../../util/ModelUtils');
 var Media = require('../media/media.model');
+var PermissionVerifier = require('../permission/permission.verifier');
 var config = require('../../config/environment');
 
-exports.allComments = function (req, res) {
-  Comment.find({}, function (err, comments) {
-    if (err) return res.send(500, err);
+exports.allAllowedComments = function (req, res) {
+  var ids = PermissionVerifier.allowedAlbumIdsByUserId(req.user._id);
+  ids.then(function(allowedIds) {
+    return Comment.find({})
+      .where('albumId').in(allowedIds)
+      .exec();
+  }).then(function(comments) {
     res.json(200, comments);
+  }, function(err) {
+    return res.send(500, err);
   });
 };
 
@@ -47,8 +54,16 @@ exports.newComment = function (req, res) {
 };
 
 exports.latestComments = function(req, res) {
-  Comment.find({}).sort('-timestamp').limit(req.params.amount).exec(function(err, comments) {
-    if (err) return res.send(500, err);
+  var ids = PermissionVerifier.allowedAlbumIdsByUserId(req.user._id);
+  ids.then(function(allowedIds) {
+    return Comment.find({})
+      .sort('-timestamp')
+      .limit(req.params.amount)
+      .where('albumId').in(allowedIds)
+      .exec();
+  }).then(function(comments) {
     res.json(200, comments);
+  }, function(err) {
+    return res.send(500, err);
   });
 };

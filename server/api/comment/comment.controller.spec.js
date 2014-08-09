@@ -5,6 +5,7 @@ var Q = require('q');
 var Comment = require('./comment.model');
 var User = require('../user/user.model');
 var Album = require('../album/album.model');
+var AlbumPermission = require('../permission/album.permission.model');
 var Media = require('../media/media.model');
 var controller = require('./comment.controller');
 var config = require('../../config/environment');
@@ -61,13 +62,40 @@ describe('Comment controller', function () {
       Comment.remove().exec(),
       User.remove().exec(),
       Album.remove().exec(),
-      Media.remove().exec()
+      Media.remove().exec(),
+      AlbumPermission.remove().exec()
     ]).then(function() {
       done();
     }, function(err) {
       done(err);
     });
   });
+
+  it('should not see any comments', function(done) {
+    ExpressControllerTester.doRequest(controller.allAllowedComments, done)
+      .asUser(userFoo)
+      .asResponse('json')
+      .withValidation(function(result, code) {
+        result.should.have.length(0);
+        code.should.be.exactly(200);
+      });
+  });
+
+  it('should now see two comments', function(done) {
+    new AlbumPermission({
+      appliedAlbumId: albumFoo._id,
+      referencedUserId: userFoo._id
+    }).save(function() {
+        ExpressControllerTester.doRequest(controller.allAllowedComments, done)
+          .asUser(userFoo)
+          .asResponse('json')
+          .withValidation(function (result, code) {
+            result.should.have.length(1);
+            code.should.be.exactly(200);
+          });
+      });
+  });
+
 
   it('should be able to store a new comment', function (done) {
     ExpressControllerTester.doRequest(controller.newComment, done)
