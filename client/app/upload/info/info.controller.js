@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('seriousBoomerangApp')
-  .controller('AlbumListCtrl', function ($scope, $http, AlbumGrouper, URLFactory) {
+  .controller('UploadInfoCtrl', function ($scope, $http, AlbumGrouper, URLFactory) {
     $scope.albums = [];
 
     AlbumGrouper.groupByYear($http.get(URLFactory.getAllowedAlbums()))

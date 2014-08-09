@@ -6,6 +6,9 @@ angular.module('seriousBoomerangApp')
       saveCommentById: function (id) {
         return '/api/comment/' + id;
       },
+      getAllowedAlbums: function() {
+        return '/api/album';
+      },
       getAlbumByYearName: function(year, name) {
         return '/api/album/' + year + '/' + name;
       },
