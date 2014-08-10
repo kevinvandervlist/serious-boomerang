@@ -13,6 +13,6 @@ angular.module('seriousBoomerangApp')
     };
 
     $scope.isActive = function(route) {
-      return $location.path().indexOf(route) > -1;
+      return $location.path().slice(0, route.length) === route;
     };
   });
