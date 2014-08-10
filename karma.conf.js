@@ -11,7 +11,7 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'client/bower_components/flowjs/dist/flow.js',
+      'client/bower_components/flow.js/dist/flow.js',
       'client/bower_components/rxjs/phantomjs.backfill.js',
       'client/bower_components/rxjs/rx.all.js',
       'client/bower_components/jquery/dist/jquery.js',
