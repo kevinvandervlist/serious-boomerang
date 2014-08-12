@@ -41,6 +41,9 @@ angular.module('seriousBoomerangApp')
       },
       deleteExistingAlbumPermission: function(albumId, userId) {
         return '/api/permission/album/' + albumId + '/' + userId;
+      },
+      uploadFileToAlbum: function(year, name) {
+        return '/api/upload/' + year + '/' + name;
       }
     };
   });

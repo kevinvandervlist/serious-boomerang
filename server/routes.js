@@ -15,6 +15,7 @@ module.exports = function(app) {
   app.use('/api/comment', require('./api/comment'));
   app.use('/api/users', require('./api/user'));
   app.use('/api/permission/', require('./api/permission'));
+  app.use('/api/upload', require('./api/upload'));
 
   app.use('/auth', require('./auth'));
 

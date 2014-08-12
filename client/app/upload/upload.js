@@ -9,7 +9,7 @@ angular.module('seriousBoomerangApp')
         controller: 'UploadInfoCtrl'
       })
       .state('uploadview', {
-        url: '/upload/:year/:name',
+        url: '/upload/add',
         templateUrl: 'app/upload/upload/upload.html',
         controller: 'UploadCtrl'
       });
