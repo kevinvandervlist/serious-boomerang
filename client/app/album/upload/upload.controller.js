@@ -12,16 +12,25 @@ angular.module('seriousBoomerangApp')
       };
     };
 
-    $scope.$on('flow::fileAdded', function () {
-      console.log('fileAdded');
+    $scope.$on('flow::filesSubmitted', function () {
+      console.log('Files submitted');
     });
 
-    $scope.$on('flow::flowProgress', function () {
-      console.log('flowProgress');
+    $scope.$on('flow::complete', function () {
+      console.log('Upload complete');
     });
 
-    $scope.$on('flow::catchAll', function () {
-      console.log('catchAll');
+    $scope.$on('flow::uploadStart', function () {
+      console.log('Starting upload');
+    });
+
+    $scope.$on('flow::error', function () {
+      console.error('error');
+    });
+
+    $scope.$on('flow::progress', function (event, flow) {
+      var percentCompleted = Math.round(arguments[1].progress() * 100);
+      console.log('progress: ' + percentCompleted + ' %.');
     });
   })
   .controller('AlbumUploadCtrl', function ($scope, $stateParams) {
