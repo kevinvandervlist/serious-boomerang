@@ -5,8 +5,8 @@
     <div class="col-lg-12">
       <h3 class="page-header">{{ album.name }}</h3>
 
-      <p>{{ album.description }}, van {{ album.startDateStr }} tot {{ album.endDateStr }}. Er zijn {{ media.length }}
-        bestanden in dit album.</p>
+      <p>{{ album.description }}, van {{ album.startDateStr }} tot {{ album.endDateStr }}. Er zijn {{ media.length }} bestanden in dit album.</p>
+      <p>Je kunt <a href="/album/{{ album.year }}/{{ album.name }}/upload">ook nieuwe fotos uploaden</a>. Deze worden automatisch aan het album toegevoegd</p>
     </div>
   </div>
   <div ng-switch on="overviewActive()">

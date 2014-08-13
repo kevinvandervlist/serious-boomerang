@@ -43,7 +43,7 @@ angular.module('seriousBoomerangApp')
         return '/api/permission/album/' + albumId + '/' + userId;
       },
       uploadFileToAlbum: function(year, name) {
-        return '/api/upload/' + year + '/' + name;
+        return '/api/upload/' + year + '/' + name + '/flow/';
       }
     };
   });

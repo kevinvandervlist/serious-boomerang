@@ -10,6 +10,7 @@ function getAlbumDetails(RXUtils, $q, $http, util, URLFactory, albumDetailsPromi
           deferredMediaDetails.resolve(result);
         });
 
+      album.year = util.getYearFromDate(album.startDate);
       album.startDateStr = util.humanReadableDate(album.startDate);
       album.endDateStr = util.humanReadableDate(album.startDate);
 
