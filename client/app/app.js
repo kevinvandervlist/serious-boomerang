@@ -6,7 +6,8 @@ angular.module('seriousBoomerangApp', [
   'ngSanitize',
   'ui.bootstrap',
   'ui.router',
-  'flow'
+  'flow',
+  'ngProgress'
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
     $urlRouterProvider

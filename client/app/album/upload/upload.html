@@ -5,6 +5,10 @@
     <h3 class="header">Upload nieuwe bestanden naar het album {{ albumName }}</h3>
     <p>Je kunt hier nieuwe bestanden uploaden. Deze zullen automatisch worden toegevoegd aan het album {{ albumName }}. </p>
 
+    <div ng-show="progress">
+      <p>Voortgang: {{ progress }}.</p>
+    </div>
+
     <div class="row">
       <div flow-init="flowInit()"
            ng-controller="UploadEventsCtrl"
@@ -18,7 +22,9 @@
                               style="visibility: hidden; position: absolute;">
   </span>
 
-        <div class="row" ng-repeat="file in $flow.files">
+        <br>
+
+        <div class="row col-lg-4" ng-repeat="file in $flow.files">
           <div class="upload-file-queue">
             <span>Bestand {{ file.name }}</span>
           </div>
