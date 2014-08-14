@@ -1,30 +1,12 @@
 'use strict';
 
-var config = require('../../config/environment');
 var gm = require('gm');
 var FFmpeg = require('fluent-ffmpeg');
 var mkdirp = require('mkdirp');
 var path = require('path');
 var fs = require('fs');
 var Q = require('q');
-
-function originalPath(year, albumName, fileName) {
-  return config.mediaDirectory + '/media/' + year + '/' + albumName + '/' + fileName;
-}
-
-function cachedPathImage(year, albumName, fileName, size) {
-  var split = fileName.split('.');
-  var ext = split.pop();
-  var file = split.join('.');
-  return config.mediaDirectory + '/cache/' + year + '/' + albumName + '/' + file + '_' + size + '.' + ext;
-}
-
-function cachedPathVideo(year, albumName, fileName, size, format) {
-  var split = fileName.split('.');
-  split.pop();
-  var file = split.join('.');
-  return config.mediaDirectory + '/cache/' + year + '/' + albumName + '/' + file + '_' + size + '.' + format;
-}
+var MediaUtils = require('./media.util');
 
 function exists(path) {
   return fs.existsSync(path);
@@ -110,8 +92,8 @@ function resizeVideo(original, destination, format, width, deferredResult) {
 }
 
 function handleImageRequest(deferred, format, year, albumName, fileName, size) {
-  var cached = cachedPathImage(year, albumName, fileName, size);
-  var original = originalPath(year, albumName, fileName);
+  var cached = MediaUtils.cachedPathImage(year, albumName, fileName, size);
+  var original = MediaUtils.originalPath(year, albumName, fileName);
 
   try {
     if(exists(cached)) {
@@ -125,8 +107,8 @@ function handleImageRequest(deferred, format, year, albumName, fileName, size) {
 }
 
 function handleVideoRequest(deferred, format, year, albumName, fileName, size) {
-  var cached = cachedPathVideo(year, albumName, fileName, size, format);
-  var original = originalPath(year, albumName, fileName);
+  var cached = MediaUtils.cachedPathVideo(year, albumName, fileName, size, format);
+  var original = MediaUtils.originalPath(year, albumName, fileName);
 
   try {
     if(exists(cached)) {

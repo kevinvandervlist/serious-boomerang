@@ -3,13 +3,14 @@
 var Album = require('./album.model');
 var passport = require('passport');
 var config = require('../../config/environment');
-var permissionVerifier = require('../permission/permission.verifier');
+var PermissionVerifier = require('../permission/permission.verifier');
+var ModelUtils = require('../../util/ModelUtils');
 
 /**
  * Get list of allowed albums
  */
 exports.index = function (req, res) {
-  var ids = permissionVerifier.allowedAlbumIdsByUserId(req.user._id);
+  var ids = PermissionVerifier.allowedAlbumIdsByUserId(req.user._id);
   ids.then(function(allowedIds) {
     return Album.find({})
       .where('_id').in(allowedIds)
@@ -42,18 +43,25 @@ exports.albumDetailsByYearName = function (req, res) {
   var year = req.params.year;
   var name = req.params.name;
 
+  var ids = PermissionVerifier.allowedAlbumIdsByUserId(req.user._id);
   var start = new Date(year, 0, 1);
   var end = new Date(year, 11, 31);
 
-  Album.findOne({
-    name: name,
-    startDate: {
-      $gte: start,
-      $lt: end
-    }
-  }, function (err, album) {
-    if (err) return res.send(500, err);
-    if (!album) return res.send(401);
-    res.json(album);
-  });
+  return ids.then(function (allowedIds) {
+    return ModelUtils.getAsPromiseOne(Album, {
+      name: name,
+      _id: {
+        $in: allowedIds
+      },
+      startDate: {
+        $gte: start,
+        $lt: end
+      }
+    });
+  }).then(function(album) {
+      if (!album) return res.send(401);
+      res.json(album);
+    }, function(err) {
+      return res.send(500, err);
+    });
 };

@@ -7,8 +7,8 @@ var auth = require('../../auth/auth.service');
 
 var router = express.Router();
 
-router.get('/', auth.hasPermission(), controller.index);
+router.get('/', auth.isAuthenticated(), controller.index);
 router.get('/all', auth.hasRole('admin'), controller.all);
-router.get('/:year/:name', auth.hasPermission(), controller.albumDetailsByYearName);
+router.get('/:year/:name', auth.isAuthenticated(), controller.albumDetailsByYearName);
 
 module.exports = router;

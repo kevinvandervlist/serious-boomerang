@@ -9,7 +9,7 @@ angular.module('seriousBoomerangApp')
 
     $scope.flowInit = function() {
       return {
-        target: URLFactory.uploadFileToAlbum($stateParams.year, $stateParams.name),
+        target: URLFactory.uploadFileToAlbum($stateParams.albumId),
         headers: {
           'Authorization': 'Bearer ' + authInterceptor.token()
         }

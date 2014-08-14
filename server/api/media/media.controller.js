@@ -6,6 +6,7 @@ var passport = require('passport');
 var config = require('../../config/environment');
 var modelUtils = require('../../util/ModelUtils');
 var MediaCache = require('./media.cache');
+var Q = require('q');
 
 /**
  * Get list of media that's associated with the requested album
@@ -75,3 +76,4 @@ exports.getSingleFile = function (req, res) {
       }, fail);
     }, fail);
 };
+

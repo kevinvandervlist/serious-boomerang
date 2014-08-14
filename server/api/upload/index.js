@@ -7,7 +7,7 @@ var auth = require('../../auth/auth.service');
 
 var router = express.Router();
 
-router.get('/:year/:name/flow', auth.isAuthenticated(), controller.handleChunkCheck);
-router.post('/:year/:name/flow', auth.isAuthenticated(),  controller.handleUpload);
+router.get('/:albumId/flow', auth.hasPermission(), controller.handleChunkCheck);
+router.post('/:albumId/flow', auth.hasPermission(),  controller.handleUpload);
 
 module.exports = router;

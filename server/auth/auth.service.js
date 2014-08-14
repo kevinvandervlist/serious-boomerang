@@ -39,13 +39,14 @@ function isAuthenticated() {
 }
 
 function verifyAccessForRequestedResource(req) {
+  // TODO: year + name combo
   var userId = req.user._id;
   if(req.params.mediaId) {
     return PermissionVerifier.userHasPermissionForMedia(userId, req.params.mediaId);
   } else if (req.params.albumId) {
     return PermissionVerifier.userHasPermissionForAlbum(userId, req.params.albumId);
   } else {
-    return PermissionVerifier.accessGranted();
+    return PermissionVerifier.accessDenied();
   }
 }
 

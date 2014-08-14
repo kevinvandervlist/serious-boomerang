@@ -4,6 +4,11 @@ var fs = require('fs'),
   mkdirp = require('mkdirp'),
   Stream = require('stream').Stream;
 
+var MediaUtils = require('../media/media.util');
+
+var image_exts = ['jpg', 'JPG'];
+var video_exts = ['mp4'];
+
 function mkdirForFileIfNotExists(destination) {
   var split = destination.split(path.sep);
   split.pop();
@@ -135,6 +140,17 @@ module.exports = flow = function(temporaryFolder) {
                 $.write(identifier, fs.createWriteStream(temporaryFolder + filename), {
                   onDone: function() {
                     $.clean(identifier);
+                    MediaUtils.addMediaToImage(req.params.year, req.params.name, filename, image_exts, video_exts)
+                      .then(function(newPath) {
+                        var from = temporaryFolder + filename;
+                        fs.rename(from, newPath, function(err) {
+                          if(err) {
+                            console.log(err);
+                          }
+                        }, function(err) {
+                          console.log(err);
+                        });
+                      });
                   }
                 });
                 callback('done', filename, original_filename, identifier);
