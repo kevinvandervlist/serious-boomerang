@@ -29,6 +29,11 @@ var all = {
     session: 'serious-boomerang-secret'
   },
 
+  // Supported image and video extensions
+  imageExtensions: ['jpg', 'JPG'],
+
+  videoExtensions: ['mp4'],
+
   // List of user roles
   userRoles: ['guest', 'user', 'admin'],
 

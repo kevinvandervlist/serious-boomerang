@@ -41,4 +41,11 @@ AlbumSchema
     return desc.length;
   }, 'Description cannot be blank');
 
+AlbumSchema
+  .virtual('year')
+  .get(function() {
+    var d = new Date(this.startDate);
+    return d.getFullYear();
+  });
+
 module.exports = mongoose.model('Album', AlbumSchema);

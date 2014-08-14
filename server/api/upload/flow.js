@@ -6,9 +6,6 @@ var fs = require('fs'),
 
 var MediaUtils = require('../media/media.util');
 
-var image_exts = ['jpg', 'JPG'];
-var video_exts = ['mp4'];
-
 function mkdirForFileIfNotExists(destination) {
   var split = destination.split(path.sep);
   split.pop();
@@ -109,7 +106,7 @@ module.exports = flow = function(temporaryFolder) {
   //'done', filename, original_filename, identifier
   //'invalid_flow_request', null, null, null
   //'non_flow_request', null, null, null
-  $.post = function(req, fields, path, callback) {
+  $.post = function(req, fields, resourcePath, callback) {
 
     var files = req.files;
 
@@ -126,7 +123,7 @@ module.exports = flow = function(temporaryFolder) {
       var chunkFilename = getChunkFilename(chunkNumber, identifier);
 
       // Save the chunk (TODO: OVERWRITE)
-      fs.rename(path, chunkFilename, function(err) {
+      fs.rename(resourcePath, chunkFilename, function(err) {
 
         // Do we have all the chunks?
         var currentTestChunk = 1;
@@ -139,16 +136,16 @@ module.exports = flow = function(temporaryFolder) {
                 // Finalize by writing the chunks to a file, and removing all of them on completion.
                 $.write(identifier, fs.createWriteStream(temporaryFolder + filename), {
                   onDone: function() {
+                    var curPath = temporaryFolder + filename;
                     $.clean(identifier);
-                    MediaUtils.addMediaToImage(req.params.year, req.params.name, filename, image_exts, video_exts)
+                    MediaUtils.addMediaToImage(req.params.albumId, filename, path.resolve(curPath))
                       .then(function(newPath) {
-                        var from = temporaryFolder + filename;
-                        fs.rename(from, newPath, function(err) {
+                        fs.rename(curPath, newPath, function(err) {
                           if(err) {
-                            console.log(err);
+                            console.error(err);
                           }
                         }, function(err) {
-                          console.log(err);
+                          console.error(err);
                         });
                       });
                   }

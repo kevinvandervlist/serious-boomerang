@@ -5,6 +5,11 @@ var Album = require('../album/album.model');
 var Media = require('./media.model');
 var passport = require('passport');
 var Q = require('q');
+var ExifImage = require('exif').ExifImage;
+
+var image_exts = config.imageExtensions;
+var video_exts = config.videoExtensions;
+var allowed_exts = video_exts.concat(image_exts);
 
 function getExtension(fileName) {
   return fileName.split('.').pop();
@@ -32,49 +37,67 @@ exports.cachedPathVideo = function(year, albumName, fileName, size, format) {
  * Add a media file to an album
  * @return A deferred path in which the asset must be placed.
  */
-exports.addMediaToImage = function(year, name, fileName, allowed_image_exts, allowed_video_exts) {
+exports.addMediaToImage = function(albumId, fileName, curPath) {
   var deferred = Q.defer();
 
   var async = Q.defer();
+
   async.resolve(fileName);
   async.promise.then(function(fileName) {
     return getExtension(fileName);
   }).then(function(ext) {
-    var allowed_exts = allowed_video_exts.concat(allowed_image_exts);
     if(allowed_exts.indexOf(ext) === -1) {
       deferred.reject('');
     }
     return ext;
   }).then(function() {
-    //return AlbumUtils.getAlbumByYearName(year, name)
-    return {};
-  }).then(function(album) {
-    var type = '';
-    var timestamp = '';
+    var async = Q.defer();
 
-    if(allowed_image_exts.indexOf(getExtension(fileName)) !== -1) {
-      type = 'image';
-      timestamp = new Date(); // TODO: Extract from exif
+    var data = {
+      type: undefined,
+      timestamp:undefined
+    };
+
+    if(image_exts.indexOf(getExtension(fileName)) !== -1) {
+      new ExifImage({ image : curPath }, function(err, exifdata) {
+        if(err) {
+          async.reject(err);
+        }
+        var split = exifdata.exif.CreateDate.split(/:| /);
+        data.timestamp = new Date(split[0], split[1] - 1, split[2]);
+        async.resolve(data);
+      });
+      data.type = 'image';
     } else {
-      type = 'video';
-      timestamp = new Date();
+      data.type = 'video';
+      data.timestamp = new Date();
+      async.resolve(data);
     }
 
+    return async.promise;
+  }).then(function(data) {
     return new Media({
-      albumId: album._id,
+      albumId: albumId,
       name: fileName,
       addedOn: new Date(),
-      timestamp: timestamp,
-      mediaType: type
+      timestamp: data.timestamp,
+      mediaType: data.type
     });
   }).then(function(media) {
-    media.save(function(err) {
-      if(err) {
+    Album
+      .findById(albumId)
+      .exec()
+      .then(function(album) {
+        media.save(function(err) {
+          if(err) {
+            deferred.reject(err);
+          } else {
+            deferred.resolve(exports.originalPath(album.year, album.name, fileName));
+          }
+        });
+      }, function(err) {
         deferred.reject(err);
-      } else {
-        deferred.resolve(exports.originalPath(year, name, fileName));
-      }
-    });
+      });
   });
 
   return deferred.promise;
