@@ -99,6 +99,7 @@ function handleImageRequest(deferred, format, year, albumName, fileName, size) {
     if(exists(cached)) {
       deferred.resolve(cached);
     } else {
+      fs.openSync(cached, 'w');
       resizeImage(original, cached, format, size, deferred);
     }
   } catch(err) {

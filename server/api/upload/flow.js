@@ -4,6 +4,7 @@ var fs = require('fs'),
   mkdirp = require('mkdirp'),
   Stream = require('stream').Stream;
 
+var jobs = require('../media/media.job.queue');
 var MediaUtils = require('../media/media.util');
 
 function mkdirForFileIfNotExists(destination) {
@@ -138,12 +139,13 @@ module.exports = flow = function(temporaryFolder) {
                   onDone: function() {
                     var curPath = temporaryFolder + filename;
                     $.clean(identifier);
-                    MediaUtils.addMediaToImage(req.params.albumId, filename, path.resolve(curPath))
-                      .then(function(newPath) {
-                        fs.rename(curPath, newPath, function(err) {
+                    MediaUtils.addMediaToAlbum(req.params.albumId, filename, path.resolve(curPath))
+                      .then(function(addResult) {
+                        fs.rename(curPath, addResult.newPath, function(err) {
                           if(err) {
                             console.error(err);
                           }
+                          jobs.addNewJob(addResult)
                         }, function(err) {
                           console.error(err);
                         });

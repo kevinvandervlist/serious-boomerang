@@ -3,7 +3,6 @@
 var config = require('../../config/environment');
 var Album = require('../album/album.model');
 var Media = require('./media.model');
-var passport = require('passport');
 var Q = require('q');
 var ExifImage = require('exif').ExifImage;
 
@@ -34,10 +33,41 @@ exports.cachedPathVideo = function(year, albumName, fileName, size, format) {
 };
 
 /**
+ * Prepare the metadata of a media file
+ */
+
+function prepareMetadata(description) {
+  var async = Q.defer();
+
+  var data = {
+    type: undefined,
+    timestamp:undefined
+  };
+
+  if(image_exts.indexOf(getExtension(description.fileName)) !== -1) {
+    new ExifImage({ image : description.curPath }, function(err, exifdata) {
+      if(err) {
+        async.reject(err);
+      }
+      var split = exifdata.exif.CreateDate.split(/:| /);
+      data.timestamp = new Date(split[0], split[1] - 1, split[2]);
+      async.resolve(data);
+    });
+    data.type = 'image';
+  } else {
+    data.type = 'video';
+    data.timestamp = new Date();
+    async.resolve(data);
+  }
+
+  return async.promise;
+}
+
+/**
  * Add a media file to an album
  * @return A deferred path in which the asset must be placed.
  */
-exports.addMediaToImage = function(albumId, fileName, curPath) {
+exports.addMediaToAlbum = function(albumId, fileName, curPath) {
   var deferred = Q.defer();
 
   var async = Q.defer();
@@ -49,50 +79,38 @@ exports.addMediaToImage = function(albumId, fileName, curPath) {
     if(allowed_exts.indexOf(ext) === -1) {
       deferred.reject('');
     }
-    return ext;
-  }).then(function() {
-    var async = Q.defer();
-
-    var data = {
-      type: undefined,
-      timestamp:undefined
+    return {
+      curPath: curPath,
+      fileName: fileName
     };
-
-    if(image_exts.indexOf(getExtension(fileName)) !== -1) {
-      new ExifImage({ image : curPath }, function(err, exifdata) {
-        if(err) {
-          async.reject(err);
-        }
-        var split = exifdata.exif.CreateDate.split(/:| /);
-        data.timestamp = new Date(split[0], split[1] - 1, split[2]);
-        async.resolve(data);
+  }).then(prepareMetadata)
+    .then(function(data) {
+      var media = new Media({
+        albumId: albumId,
+        name: fileName,
+        addedOn: new Date(),
+        timestamp: data.timestamp,
+        mediaType: data.type
       });
-      data.type = 'image';
-    } else {
-      data.type = 'video';
-      data.timestamp = new Date();
-      async.resolve(data);
-    }
-
-    return async.promise;
-  }).then(function(data) {
-    return new Media({
-      albumId: albumId,
-      name: fileName,
-      addedOn: new Date(),
-      timestamp: data.timestamp,
-      mediaType: data.type
-    });
-  }).then(function(media) {
+      return {
+        media: media,
+        data: data
+      }
+  }).then(function(result) {
     Album
       .findById(albumId)
       .exec()
       .then(function(album) {
-        media.save(function(err) {
+        result.media.save(function(err) {
           if(err) {
             deferred.reject(err);
           } else {
-            deferred.resolve(exports.originalPath(album.year, album.name, fileName));
+            var newPath = exports.originalPath(album.year, album.name, fileName);
+            deferred.resolve({
+              id: result.media._id,
+              newPath: newPath,
+              type: result.data.type
+            });
           }
         });
       }, function(err) {

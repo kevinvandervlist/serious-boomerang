@@ -7,6 +7,7 @@ var Album = require('../album/album.model');
 var controller = require('./media.controller');
 var config = require('../../config/environment');
 var ExpressControllerTester = require('../../util/ExpressControllerTester');
+var fs = require('fs');
 
 var albumFoo, albumBar, mediaFoo, mediaBar;
 
@@ -130,10 +131,12 @@ describe('Media controller', function () {
       ExpressControllerTester.doRequest(controller.getSingleFile, done)
         .withParams({
           albumId: albumFoo._id,
-          mediaId: mediaFoo._id
+          mediaId: mediaFoo._id,
+          size: 345
         })
         .asResponse('send')
         .withValidation(function (result, err) {
+          fs.unlink(config.mediaDirectory + 'cache/2014/Foo/foo_345.jpg');
           err.should.be.exactly(500);
         });
     });

@@ -30,9 +30,9 @@ var all = {
   },
 
   // Supported image and video extensions
-  imageExtensions: ['jpg', 'JPG'],
+  imageExtensions: ['jpg', 'JPG', 'jpeg', 'JPEG', 'png', 'PNG', 'gif', 'GIF'],
 
-  videoExtensions: ['mp4'],
+  videoExtensions: ['mp4', 'MP4', 'mpg', 'MPG', 'avi', 'AVI', 'asf', 'ASF', 'mp4', 'MP4', 'mov', 'MOV', 'm4v', 'M4V', 'flv', 'FLV'],
 
   // List of user roles
   userRoles: ['guest', 'user', 'admin'],

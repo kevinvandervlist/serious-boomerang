@@ -68,7 +68,6 @@ exports.getSingleFile = function (req, res) {
       var fileName = media.name;
 
       var pathPromise = MediaCache.fromCacheOrGenerate(media.mediaType, req.params.format, year, album.name, fileName, req.params.size);
-
       pathPromise.then(function(path) {
         res.sendfile(path, function(err) {
           if (err) next(err);
