@@ -76,3 +76,19 @@ exports.getSingleFile = function (req, res) {
     }, fail);
 };
 
+exports.deleteSingleFile = function (req, res) {
+  modelUtils.getAsPromiseOne(Media, {
+    _id: req.params.mediaId,
+    albumId: req.params.albumId
+  }).then(function(media) {
+    media.remove(function(err) {
+      if(err) {
+        res.send(500, err);
+      } else {
+        res.json(200, media);
+      }
+    });
+  }, function(err) {
+    res.send(404, err);
+  });
+};

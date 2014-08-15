@@ -141,4 +141,32 @@ describe('Media controller', function () {
         });
     });
   });
+
+  it('should be able to delete an existing file', function (done) {
+    mediaFoo.save(function() {
+      ExpressControllerTester.doRequest(controller.deleteSingleFile, function() {})
+        .withParams({
+          albumId: albumFoo._id,
+          mediaId: mediaFoo._id
+        })
+        .asResponse('json')
+        .withValidation(function(result, code) {
+          should.exist(result);
+          code.should.be.exactly(200);
+          result.should.be.an.Object;
+          result._id.should.eql(mediaFoo._id);
+          result.albumId.should.eql(albumFoo._id.toString());
+          result.name.should.equal('foo.jpg');
+          ExpressControllerTester.doRequest(controller.describeSingleFile, done)
+            .withParams({
+              albumId: albumFoo._id,
+              mediaId: mediaFoo._id
+            })
+            .asResponse('send')
+            .withValidation(function(result, code) {
+              code.should.be.exactly(404);
+            });
+        });
+    });
+  });
 });
