@@ -19,12 +19,14 @@ else
     CURPID=-1
 fi
 
-# kill it in case its running:
-kill $(cat $NPMPID)
-
 # Remove the old app:
 rm -rf app.really.old
 mv app.old app.really.old
+
+# kill it in case its running:
+kill $(cat $NPMPID)
+
+# 'install' the new version, 'backup' the old one.
 mv app app.old
 mv new app
 
