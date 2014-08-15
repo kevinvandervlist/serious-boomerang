@@ -16,9 +16,6 @@ angular.module('seriousBoomerangApp')
       };
     };
 
-    $scope.$on('flow::filesSubmitted', function () {
-    });
-
     $scope.$on('flow::complete', function () {
       ngProgress.complete();
       emitUploadStatus('success');
