@@ -76,9 +76,11 @@ function configureDetailedMediaView(RXUtils, $http, URLFactory, $scope) {
 }
 
 angular.module('seriousBoomerangApp')
-  .controller('AlbumViewCtrl', function ($scope, $stateParams, $http, $q, URLFactory, HtmlUtilities, rx, RXUtils, authInterceptor) {
+  .controller('AlbumViewCtrl', function ($scope, $stateParams, $http, $q, URLFactory, HtmlUtilities, rx, RXUtils, authInterceptor, Auth) {
     var token = authInterceptor.token();
     var numberOfMediaFiles = -1;
+
+    $scope.isAdmin = Auth.isAdmin;
 
     $scope.album = null;
     $scope.media = [];
@@ -106,6 +108,17 @@ angular.module('seriousBoomerangApp')
         $scope.nextMediaID = id + 1;
         configureDetailedMediaView(RXUtils, $http, URLFactory, $scope);
       }
+    };
+
+    $scope.removeMedia = function(media) {
+      $http.delete('/api/media/' + $scope.album._id + '/' + media._id)
+        .then(function() {
+          var index = $scope.media.indexOf(media);
+          if (index > -1) {
+            $scope.media.splice(index, 1);
+            $scope.setMedia(undefined);
+          }
+        });
     };
 
     $scope.overviewActive = function() {

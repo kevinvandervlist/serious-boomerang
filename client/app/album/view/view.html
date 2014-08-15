@@ -7,6 +7,12 @@
 
       <p>{{ album.description }}, van {{ album.startDateStr }} tot {{ album.endDateStr }}. Er zijn {{ media.length }} bestanden in dit album.</p>
       <p>Je kunt <b><a href="/album/{{ album._id }}/{{ album.name }}/upload">ook nieuwe fotos uploaden</a></b>. Deze worden automatisch aan het album toegevoegd</p>
+      <div ng-hide="overviewActive()">
+        <span>
+          Delete deze foto:
+          <img ng-show="isAdmin()" ng-src="assets/images/delete.png" style="max-height: 10px;" ng-click="removeMedia(selectedMedia)">
+        </span>
+      </div>
     </div>
   </div>
   <div ng-switch on="overviewActive()">
