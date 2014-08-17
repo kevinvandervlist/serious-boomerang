@@ -141,14 +141,8 @@ module.exports = flow = function(temporaryFolder) {
                     $.clean(identifier);
                     MediaUtils.addMediaToAlbum(req.params.albumId, filename, path.resolve(curPath))
                       .then(function(addResult) {
-                        fs.rename(curPath, addResult.newPath, function(err) {
-                          if(err) {
-                            console.error(err);
-                          }
-                          jobs.addNewJob(addResult)
-                        }, function(err) {
-                          console.error(err);
-                        });
+                        addResult.curPath = curPath;
+                        jobs.addNewJob(addResult);
                       });
                   }
                 });
