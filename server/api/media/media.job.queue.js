@@ -60,6 +60,12 @@ function handleVideoJob(data) {
   return Cache
     .fromCacheOrGenerate('image', 'webm', data.album.year, data.album.name, data.media.name, 345)
     .then(function() {
+      return Cache.fromCacheOrGenerate('image', 'webm', data.album.year, data.album.name, data.media.name, 960)
+    })
+    .then(function() {
+      return Cache.fromCacheOrGenerate('image', 'mp4', data.album.year, data.album.name, data.media.name, 345);
+    })
+    .then(function() {
       return Cache.fromCacheOrGenerate('image', 'mp4', data.album.year, data.album.name, data.media.name, 960);
     })
 }
