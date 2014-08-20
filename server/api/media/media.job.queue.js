@@ -22,25 +22,27 @@ function moveFile(job) {
 }
 
 function handleJob(job) {
-  winston.debug('handleJob entry, findById: ' + job.id);
+  winston.debug('handleJob entry, findById: ' + job.id.toString());
   var dataDescription = Media
     .findById(job.id)
     .exec()
     .then(function(media) {
-      winston.debug('handleJob found media with id ' + media._id + '. Using albumId: ' + media.albumId);
+      winston.debug('handleJob found media with id ' + media._id.toString() + '. Using albumId: ' + media.albumId.toString());
       return Album
         .findById(media.albumId)
         .exec()
         .then(function(album) {
-          winston.debug('handleJob found album with id: ' + album._id);
+          winston.debug('handleJob found album with id: ' + album._id.toString());
           return {
             media: media,
             album: album
           };
         })
     }, function(err) {
-      winston.error('handleJob error:');
-      winston.error(err);
+      winston.error({
+        message: 'handleJob error:',
+        error: err
+      });
     });
   if(job.type === 'image') {
     winston.debug('handleJob type: image');

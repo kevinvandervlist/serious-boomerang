@@ -15,13 +15,25 @@ var errorHandler = require('errorhandler');
 var path = require('path');
 var config = require('./environment');
 var passport = require('passport');
+var winston = require('winston');
 
 module.exports = function(app) {
   var env = app.get('env');
 
+  // Log http stuff through winston and stdout
+  var winstonStream = {
+    write: function(message){
+      winston.info(message);
+    }
+  };
+
   app.set('views', config.root + '/server/views');
   app.engine('html', require('ejs').renderFile);
   app.set('view engine', 'html');
+  app.use(morgan({
+    format: 'default',
+    stream: winstonStream
+  }));
   app.use(compression());
   app.use(bodyParser());
   app.use(methodOverride());
@@ -32,7 +44,6 @@ module.exports = function(app) {
     app.use(favicon(path.join(config.root, 'public', 'favicon.ico')));
     app.use(express.static(path.join(config.root, 'public')));
     app.set('appPath', config.root + '/public');
-    app.use(morgan('dev'));
   }
 
   if ('development' === env || 'test' === env) {
@@ -40,7 +51,7 @@ module.exports = function(app) {
     app.use(express.static(path.join(config.root, '.tmp')));
     app.use(express.static(path.join(config.root, 'client')));
     app.set('appPath', 'client');
-    app.use(morgan('dev'));
     app.use(errorHandler()); // Error handler - has to be last
   }
+
 };

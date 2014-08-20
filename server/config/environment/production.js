@@ -4,6 +4,8 @@
 // =================================
 module.exports = {
   logLevel: 'debug',
+  logglyEnabled: true,
+  logglyTags: ['production'],
   // Server IP
   ip:       process.env.OPENSHIFT_NODEJS_IP ||
             process.env.IP ||

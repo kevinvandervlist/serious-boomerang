@@ -4,6 +4,8 @@
 // ===========================
 module.exports = {
   logLevel: 'debug',
+  logglyEnabled: false,
+  logglyTags: ['test'],
   // MongoDB connection options
   mongo: {
     uri: 'mongodb://localhost/seriousboomerang-test'
