@@ -45,3 +45,6 @@
 .user-comment {
   width: 100%;
 }
+.non-draggable-image{
+  -webkit-user-drag: none;
+}

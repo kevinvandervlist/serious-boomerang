@@ -7,7 +7,8 @@ angular.module('seriousBoomerangApp', [
   'ui.bootstrap',
   'ui.router',
   'flow',
-  'ngProgress'
+  'ngProgress',
+  'ngTouch'
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
     $urlRouterProvider

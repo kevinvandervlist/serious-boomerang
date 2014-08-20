@@ -19,12 +19,16 @@
     <!-- Single media -> detailed view -->
     <div class="animate-switch" ng-switch-when="false">
       <div>
-        <div class="row" ng-switch on="selectedMedia.mediaType">
+        <div class="row slide slide-animation non-draggable-image" ng-switch on="selectedMedia.mediaType"
+             ng-swipe-right="setMedia(prevMediaID)" ng-swipe-left="setMedia(nextMediaID)">
           <div ng-switch-when="image">
             <img
               class="showcase center-block"
               ng-src="{{ util.asTrustedResource(selectedMedia.url, largeSize) }}"
-              alt="{{ selectedMedia.name }}" ng-click="setMedia(nextMediaID)"
+              alt="{{ selectedMedia.name }}"
+              ng-left="setMedia(prevMediaID)"
+              ng-right="setMedia(nextMediaID)"
+              tabindex="0"
               >
           </div>
           <div ng-switch-when="video">

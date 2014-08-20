@@ -100,7 +100,7 @@ angular.module('seriousBoomerangApp')
     };
 
     $scope.setMedia = function(id) {
-      if (id === undefined) {
+      if (id === undefined && id >= 0 && id < $scope.media.length) {
         $scope.selectedMedia = undefined;
       } else {
         $scope.selectedMedia = $scope.media[id];
