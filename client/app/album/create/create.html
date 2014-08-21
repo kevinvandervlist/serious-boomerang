@@ -1,0 +1,43 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+<div class="container">
+  <div class="col-lg-12">
+    <h3 class="header">Maak een nieuw album aan.</h3>
+
+    <p>Vul het onderstaande formulier in om een nieuw album aan te maken.
+      Deze zal standaard <span class="emph">niet</span> beschikbaar zijn voor nieuwe gebruikers.
+      De rechten hiervoor zijn op <a href="/admin/albumpermissions">deze pagina</a> aan te passen.
+    </p>
+
+    <p ng-show="success">
+      {{ success }}
+    </p>
+
+    <form name="createAlbum" ng-submit="submitNewAlbum()">
+      <div class="form-group">
+        <label for="albumName"><span class="glyphicon glyphicon-font">&nbsp;</span>Album naam:</label>
+        <input class="input-lg form-control" ng-model="album.name" type="text" class="form-control" id="albumName" name="albumName" placeholder="De naam van het album" required />
+      </div>
+      <div class="form-group">
+        <label for="albumDescription"><span class="glyphicon glyphicon-font">&nbsp;</span>Album bescrijving</label>
+        <input class="input-lg form-control" ng-model="album.description" type="text" id="albumDescription" name="albumDeescription" placeholder="Een beschrijving" required />
+      </div>
+      <div class="form-group">
+        <label for="albumStartDate"><span class="glyphicon glyphicon-calendar">&nbsp;</span>Start van het album</label>
+        <input class="input-lg form-control form-control" ng-model="album.startDate" type="date" id=albumStartDate" name="albumStartDate" required />
+      </div>
+      <div class="form-group">
+        <label for="albumEndDate"><span class="glyphicon glyphicon-calendar">&nbsp;</span>Einde van het album</label>
+        <input class="input-lg form-control" ng-model="album.endDate" type="date" id="albumEndDate" name="albumEndDate" required />
+      </div>
+
+      <span class="input-lg error" ng-show="error">{{ error }}</span>
+
+      <button type="submit" class="btn btn-success btn-lg btn-block">
+        <span class="glyphicon glyphicon-floppy-disk"></span>Opslaan
+      </button>
+    </form>
+  </div>
+</div>
+
+<div ng-include="'components/footer/footer.html'"></div>

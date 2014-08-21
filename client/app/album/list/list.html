@@ -4,6 +4,12 @@
   <div class="row">
     <div class="col-lg-12">
       <h3 class="page-header">Albums:</h3>
+      <div ng-show="isAdmin()">
+        <a href="/album/create">
+          <span class="glyphicon glyphicon-plus">&nbsp;</span>Nieuw album
+        </a>
+      </div>
+      <br>
       <ul class="nav nav-tabs nav-stacked col-lg-12" ng-repeat="_set in albums | orderBy:'-key'">
         <li class="albumyear">{{ _set.key }}</li>
         <li>

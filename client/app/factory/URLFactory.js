@@ -44,6 +44,9 @@ angular.module('seriousBoomerangApp')
       },
       uploadFileToAlbum: function(albumId) {
         return '/api/upload/' + albumId + '/flow/';
+      },
+      createAlbum: function() {
+        return '/api/album/create';
       }
     };
   });

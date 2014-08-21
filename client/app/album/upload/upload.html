@@ -15,12 +15,17 @@
            ng-controller="UploadEventsCtrl"
            flow-files-submitted="$flow.upload()">
 
-  <span class="btn btn-default" flow-btn>Upload bestanden
+  <span class="btn btn-default" flow-btn>
+    <span class="glyphicon glyphicon-facetime-video"></span>
+    <span class="glyphicon glyphicon-camera"></span>
+    <span class="glyphicon glyphicon-picture"></span>
+    Upload
     <input type="file" style="visibility: hidden; position: absolute;">
   </span>
   <span class="btn btn-default" flow-btn flow-directory="" ng-show="$flow.supportDirectory">
-    Upload een hele map<input type="file" webkitdirectory="webkitdirectory"
-                              style="visibility: hidden; position: absolute;">
+    <span class="glyphicon glyphicon-folder-open"></span>
+    Upload
+    <input type="file" webkitdirectory="webkitdirectory" style="visibility: hidden; position: absolute;">
   </span>
 
         <br>

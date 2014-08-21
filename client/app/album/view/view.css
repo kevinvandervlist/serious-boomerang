@@ -48,3 +48,9 @@
 .non-draggable-image{
   -webkit-user-drag: none;
 }
+.navigation-glyph {
+  font-size: 7.5em;
+}
+.menu-glyph {
+  font-size: 1.5em;
+}

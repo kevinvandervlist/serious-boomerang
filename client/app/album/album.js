@@ -17,5 +17,10 @@ angular.module('seriousBoomerangApp')
         url: '/album/:albumId/:name/upload',
         templateUrl: 'app/album/upload/upload.html',
         controller: 'AlbumUploadCtrl'
+      })
+      .state('albumcreate', {
+        url: '/album/create',
+        templateUrl: 'app/album/create/create.html',
+        controller: 'CreateAlbumCtrl'
       });
   });

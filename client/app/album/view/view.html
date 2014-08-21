@@ -8,10 +8,11 @@
       <p>{{ album.description }}, van {{ album.startDateStr }} tot {{ album.endDateStr }}. Er zijn {{ media.length }} bestanden in dit album.</p>
       <p>Je kunt <b><a href="/album/{{ album._id }}/{{ album.name }}/upload">ook nieuwe fotos uploaden</a></b>. Deze worden automatisch aan het album toegevoegd</p>
       <div ng-hide="overviewActive()">
-        <span>
-          Delete deze foto:
-          <img ng-show="isAdmin()" ng-src="assets/images/delete.png" style="max-height: 10px;" ng-click="removeMedia(selectedMedia)">
-        </span>
+        <span class="glyphicon glyphicon-trash menu-glyph" ng-show="isAdmin()" ng-click="removeMedia(selectedMedia)">&nbsp;</span>
+        <!--
+        <span class="glyphicon glyphicon-star menu-glyph">&nbsp;</span>
+        <span class="glyphicon glyphicon-star-empty menu-glyph">&nbsp;</span>
+        -->
       </div>
     </div>
   </div>
@@ -40,11 +41,9 @@
           </div>
         </div>
         <div class="row controls">
-          <img ng-src="assets/images/left.png" ng-show="hasMediaAtPosition(prevMediaID)"
-               ng-click="setMedia(prevMediaID)">
-          <img ng-src="assets/images/up.png" ng-click="setMedia(undefined)">
-          <img ng-src="assets/images/right.png" ng-show="hasMediaAtPosition(nextMediaID)"
-               ng-click="setMedia(nextMediaID)">
+          <span class="glyphicon glyphicon-chevron-left navigation-glyph" ng-show="hasMediaAtPosition(prevMediaID)" ng-click="setMedia(prevMediaID)">&nbsp;</span>
+          <span class="glyphicon glyphicon-chevron-up navigation-glyph" ng-click="setMedia(undefined)">&nbsp;</span>
+          <span class="glyphicon glyphicon-chevron-right navigation-glyph" ng-show="hasMediaAtPosition(nextMediaID)" ng-click="setMedia(nextMediaID)">&nbsp;</span>
         </div>
         <div class="row comments">
           <div class="col-xs-12 col-centered comment" ng-repeat="c in comments | orderBy:'timestamp'" ng-class-odd="'oddcomment'" ng-class-even="'evencomment'">
@@ -61,7 +60,7 @@
             <textarea class="input-lg user-comment" ng-model="comment.text" type="text" name="user-comment" placeholder="Je reactie"></textarea>
             <span class="input-lg error" ng-show="comment.error">{{ comment.error }}</span>
             <button type="submit" class="btn btn-success btn-lg btn-block">
-              <span class="glyphicon glyphicon-flash"></span> Opslaan
+              <span class="glyphicon glyphicon-comment">&nbsp;</span>
             </button>
           </form>
         </div>

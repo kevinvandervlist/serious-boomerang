@@ -10,5 +10,6 @@ var router = express.Router();
 router.get('/', auth.isAuthenticated(), controller.index);
 router.get('/all', auth.hasRole('admin'), controller.all);
 router.get('/:year/:name', auth.isAuthenticated(), controller.albumDetailsByYearName);
+router.post('/create', auth.hasRole('admin'), controller.createNewAlbum);
 
 module.exports = router;
