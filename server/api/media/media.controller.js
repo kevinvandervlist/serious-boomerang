@@ -16,8 +16,11 @@ exports.index = function (req, res) {
   Media.find({
     albumId: albumId
   }, function (err, medialist) {
-    if (err) return res.send(500, err);
-    res.json(200, medialist);
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.json(200, medialist);
+    }
   });
 };
 
@@ -33,7 +36,7 @@ exports.describeSingleFile = function (req, res) {
   }).then(function(value) {
     res.json(200, value);
   }, function(err) {
-    res.send(404, err);
+    res.status(404).send(err);
   });
 };
 
@@ -44,7 +47,7 @@ exports.describeSingleFile = function (req, res) {
  */
 exports.getSingleFile = function (req, res) {
   var fail = function(err) {
-    res.send(500, err);
+    res.status(500).send(err);
   };
 
   var albumPromise = modelUtils
@@ -70,7 +73,9 @@ exports.getSingleFile = function (req, res) {
       var pathPromise = MediaCache.fromCacheOrGenerate(media.mediaType, req.params.format, year, album.name, fileName, req.params.size);
       pathPromise.then(function(path) {
         res.sendFile(path, function(err) {
-          if (err) next(err);
+          if (err) {
+            next(err);
+          }
         });
       }, fail);
     }, fail);
@@ -83,12 +88,12 @@ exports.deleteSingleFile = function (req, res) {
   }).then(function(media) {
     media.remove(function(err) {
       if(err) {
-        res.send(500, err);
+        res.status(500).send(err);
       } else {
         res.json(200, media);
       }
     });
   }, function(err) {
-    res.send(404, err);
+    res.status(404).send();
   });
 };

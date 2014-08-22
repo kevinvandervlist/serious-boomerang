@@ -18,7 +18,7 @@ exports.index = function (req, res) {
   }).then(function(albums) {
     res.json(200, albums);
   }, function(err) {
-    return res.send(500, err);
+    res.status(500).send(err);
   });
 };
 
@@ -32,7 +32,7 @@ exports.all = function (req, res) {
     .then(function(albums) {
       res.json(200, albums);
     }, function(err) {
-      return res.send(500, err);
+      res.status(500).send(err);
     });
 };
 
@@ -59,10 +59,13 @@ exports.albumDetailsByYearName = function (req, res) {
       }
     });
   }).then(function(album) {
-      if (!album) return res.send(401);
-      res.json(album);
+      if (!album) {
+        res.status(401).send();
+      } else {
+        res.json(album);
+      }
     }, function(err) {
-      return res.send(500, err);
+      res.status(500).send(err);
     });
 };
 
@@ -82,7 +85,7 @@ exports.createNewAlbum = function(req, res) {
     if(err) {
       return error(err);
     } else {
-      res.send(201);
+      res.status(201).send();
     }
   });
 };

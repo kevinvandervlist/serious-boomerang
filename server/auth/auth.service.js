@@ -30,7 +30,9 @@ function isAuthenticated() {
     .use(function(req, res, next) {
       User.findById(req.user._id, function (err, user) {
         if (err) return next(err);
-        if (!user) return res.send(401);
+        if (!user) {
+          res.status(401).send();
+        }
 
         req.user = user;
         next();
@@ -63,10 +65,10 @@ function hasPermission() {
         if(result.access) {
           next();
         } else {
-          res.send(403);
+          res.status(403).send();
         }
       }, function() {
-        res.send(403);
+        res.status(403).send();
       });
     });
 }
@@ -84,7 +86,7 @@ function hasRole(roleRequired) {
         next();
       }
       else {
-        res.send(403);
+        res.status(403).send();
       }
     });
 }

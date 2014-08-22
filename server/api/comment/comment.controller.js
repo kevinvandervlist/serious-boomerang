@@ -16,14 +16,17 @@ exports.allAllowedComments = function (req, res) {
   }).then(function(comments) {
     res.json(200, comments);
   }, function(err) {
-    return res.send(500, err);
+    res.status(500).send(err);
   });
 };
 
 exports.commentsByMediaId = function (req, res) {
   Comment.find({mediaId: req.params.mediaId}, function (err, comments) {
-    if (err) return res.send(500, err);
-    res.json(200, comments);
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.json(200, comments);
+    }
   });
 };
 
@@ -45,8 +48,11 @@ exports.newComment = function (req, res) {
       timestamp: new Date()
     });
     comment.save(function(err) {
-      if (err) { return error(err) }
-      res.send(201);
+      if (err) {
+        return error(err)
+      } else {
+        res.status(201).send();
+      }
     });
   }, function(err) {
     return error(err);
@@ -64,6 +70,6 @@ exports.latestComments = function(req, res) {
   }).then(function(comments) {
     res.json(200, comments);
   }, function(err) {
-    return res.send(500, err);
+    res.status(500).send(err);
   });
 };

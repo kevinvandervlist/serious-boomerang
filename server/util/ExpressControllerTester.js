@@ -14,6 +14,11 @@ function assertValidCall(name) {
   }
 }
 
+function status(status) {
+  self.status = status;
+  return self.res;
+}
+
 function json(status, body) {
   assertValidCall('json');
   self.deferredResult.resolve({
@@ -22,10 +27,10 @@ function json(status, body) {
   });
 }
 
-function send(status, body) {
+function send(body) {
   assertValidCall('send');
   self.deferredResult.resolve({
-    status: status,
+    status: self.status,
     body: body
   });
 }
@@ -33,7 +38,8 @@ function send(status, body) {
 function sendFile(body, cb) {
   assertValidCall('sendFile');
   self.deferredResult.resolve({
-    status: cb,
+    status: self.status,
+    cb: cb,
     body: body
   });
 }
@@ -44,6 +50,7 @@ var ExpressControllerTester = function (_testFunc, _doneFunc) {
   this.testFunc = _testFunc;
   this.doneFunc = _doneFunc;
   this.expectedFuncs = [];
+  this.status = -1;
 
   this.req = {
     params: {},
@@ -52,6 +59,7 @@ var ExpressControllerTester = function (_testFunc, _doneFunc) {
   };
 
   this.res = {
+    'status': status,
     'json': json,
     'send': send,
     'sendFile': sendFile

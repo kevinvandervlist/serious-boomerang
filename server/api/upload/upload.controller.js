@@ -8,7 +8,8 @@ var flow = require('./flow')(uploadDir);
 
 exports.handleChunkCheck = function(req, res) {
   flow.get(req, function(status) {
-    res.send(200, (status == 'found' ? 200 : 404));
+    var res = (status === 'found' ? 200 : 404);
+    res.status(res).send(res);
   });
 };
 
@@ -18,10 +19,10 @@ exports.handleUpload = function(req, res) {
 
   form.parse(req, function(err, fields, files) {
     if(err) {
-      res.send(500, err);
+      res.status(500).send(err);
     } else {
       flow.post(req, fields, files.file.path, function() {
-        res.send(200);
+        res.status(200).send();
       })
     }
   });

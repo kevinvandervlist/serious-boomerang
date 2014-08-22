@@ -12,7 +12,7 @@ exports.allAlbumPermissions = function (req, res) {
     .then(function(permissions) {
       res.json(200, permissions)
     }, function(err) {
-      res.send(500, err);
+      res.status(500).send(err);
     });
 };
 
@@ -20,9 +20,9 @@ exports.addAlbumPermission = function (req, res) {
   var perm = new AlbumPermission(req.body);
   perm.save(function(err) {
     if(err) {
-      res.send(500, err);
+      return res.status(500).send(err);
     } else {
-      res.send(200);
+      res.status(200).send();
     }
   });
 };
@@ -35,8 +35,8 @@ exports.deleteAlbumPermission = function (req, res) {
     })
     .exec()
     .then(function(permission) {
-      res.send(200, permission)
+      res.status(200).send(permission);
     }, function(err) {
-      res.send(500, err);
+      res.status(500).send(err);
     });
 };
