@@ -19,10 +19,10 @@ function status(status) {
   return self.res;
 }
 
-function json(status, body) {
+function json(body) {
   assertValidCall('json');
   self.deferredResult.resolve({
-    status: status,
+    status: self.status,
     body: body
   });
 }

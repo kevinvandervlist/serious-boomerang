@@ -14,7 +14,7 @@ exports.allAllowedComments = function (req, res) {
       .where('albumId').in(allowedIds)
       .exec();
   }).then(function(comments) {
-    res.json(200, comments);
+    res.status(200).json(comments);
   }, function(err) {
     res.status(500).send(err);
   });
@@ -25,14 +25,14 @@ exports.commentsByMediaId = function (req, res) {
     if (err) {
       res.status(500).send(err);
     } else {
-      res.json(200, comments);
+      res.status(200).json(comments);
     }
   });
 };
 
 exports.newComment = function (req, res) {
   function error(err) {
-    return res.json(422, err);
+    return res.status(422).json(err);
   }
   var mediaPromise = modelUtils
     .getAsPromiseOne(Media, {
@@ -68,7 +68,7 @@ exports.latestComments = function(req, res) {
       .where('albumId').in(allowedIds)
       .exec();
   }).then(function(comments) {
-    res.json(200, comments);
+    res.status(200).json(comments);
   }, function(err) {
     res.status(500).send(err);
   });

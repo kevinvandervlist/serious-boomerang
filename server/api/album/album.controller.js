@@ -16,7 +16,7 @@ exports.index = function (req, res) {
       .where('_id').in(allowedIds)
       .exec();
   }).then(function(albums) {
-    res.json(200, albums);
+    res.status(200).json(albums);
   }, function(err) {
     res.status(500).send(err);
   });
@@ -30,7 +30,7 @@ exports.all = function (req, res) {
     .find({})
     .exec()
     .then(function(albums) {
-      res.json(200, albums);
+      res.status(200).json(albums)
     }, function(err) {
       res.status(500).send(err);
     });
@@ -62,7 +62,7 @@ exports.albumDetailsByYearName = function (req, res) {
       if (!album) {
         res.status(401).send();
       } else {
-        res.json(album);
+        res.status(200).json(album)
       }
     }, function(err) {
       res.status(500).send(err);
@@ -71,7 +71,7 @@ exports.albumDetailsByYearName = function (req, res) {
 
 exports.createNewAlbum = function(req, res) {
   function error(err) {
-    return res.json(422, err);
+    res.status(422).json(err)
   }
 
   var album = new Album({

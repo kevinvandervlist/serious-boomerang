@@ -6,7 +6,7 @@ var config = require('../../config/environment');
 var jwt = require('jsonwebtoken');
 
 var validationError = function(res, err) {
-  return res.json(422, err);
+  return res.status(422).json(err);
 };
 
 /**
@@ -18,7 +18,7 @@ exports.index = function(req, res) {
     if(err) {
       res.status(500).send(err);
     } else {
-      res.json(200, users);
+      res.status(200).json(users)
     }
   });
 };
@@ -35,7 +35,7 @@ exports.create = function (req, res, next) {
       return validationError(res, err);
     }
     var token = jwt.sign({_id: user._id }, config.secrets.session, { expiresInMinutes: 60*5 });
-    res.json({ token: token });
+    res.status(200).json({ token: token });
   });
 };
 
@@ -52,7 +52,7 @@ exports.show = function (req, res, next) {
     if (!user) {
       return res.status(401).send();
     }
-    res.json(user.profile);
+    res.status(200).json(user.profile);
   });
 };
 
@@ -107,7 +107,7 @@ exports.me = function(req, res, next) {
     } else if (!user) {
       return res.status(401).send();
     } else {
-      return res.json(user);
+      return res.status(200).json(user);
     }
   });
 };
@@ -115,6 +115,6 @@ exports.me = function(req, res, next) {
 /**
  * Authentication callback
  */
-exports.authCallback = function(req, res, next) {
+exports.authCallback = function(req, res) {
   res.redirect('/');
 };

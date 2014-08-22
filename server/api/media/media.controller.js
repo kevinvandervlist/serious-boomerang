@@ -19,7 +19,7 @@ exports.index = function (req, res) {
     if (err) {
       res.status(500).send(err);
     } else {
-      res.json(200, medialist);
+      res.status(200).json(medialist);
     }
   });
 };
@@ -34,7 +34,7 @@ exports.describeSingleFile = function (req, res) {
     _id: req.params.mediaId,
     albumId: req.params.albumId
   }).then(function(value) {
-    res.json(200, value);
+    res.status(200).json(value)
   }, function(err) {
     res.status(404).send(err);
   });
@@ -90,10 +90,10 @@ exports.deleteSingleFile = function (req, res) {
       if(err) {
         res.status(500).send(err);
       } else {
-        res.json(200, media);
+        res.status(200).json(media)
       }
     });
   }, function(err) {
-    res.status(404).send();
+    res.status(404).send(err);
   });
 };

@@ -10,7 +10,7 @@ exports.allAlbumPermissions = function (req, res) {
     .find({})
     .exec()
     .then(function(permissions) {
-      res.json(200, permissions)
+      res.status(200).json(permissions);
     }, function(err) {
       res.status(500).send(err);
     });
