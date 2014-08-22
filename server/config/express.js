@@ -30,8 +30,7 @@ module.exports = function(app) {
   app.set('views', config.root + '/server/views');
   app.engine('html', require('ejs').renderFile);
   app.set('view engine', 'html');
-  app.use(morgan({
-    format: 'default',
+  app.use(morgan('combined', {
     stream: winstonStream
   }));
   app.use(compression());
