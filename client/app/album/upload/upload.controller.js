@@ -42,14 +42,20 @@ angular.module('seriousBoomerangApp')
     $scope.progress = undefined;
 
     $scope.$on('uploadStatus', function(event, message) {
+      $scope.busy = false;
+      $scope.error = false;
+      $scope.done = false;
       switch (message) {
         case 'start':
+          $scope.busy = true;
           $scope.progress = 'De upload is gestart.';
           break;
         case 'success':
+          $scope.done = true;
           $scope.progress = 'De upload is voltooid. De bestanden worden nu automatisch toegevoegd aan het album. Bedankt voor het uploaden!';
           break;
         case 'error':
+          $scope.error = true;
           $scope.progress = 'Er is iets foutgegaan!';
           break;
       }

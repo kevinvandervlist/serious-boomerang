@@ -91,12 +91,12 @@ function resizeVideo(original, destination, format, width, deferredResult) {
   }
 }
 
-function handleImageRequest(deferred, format, year, albumName, fileName, size) {
+function handleImageRequest(deferred, format, year, albumName, fileName, size, forceCacheInvalidation) {
   var cached = MediaUtils.cachedPathImage(year, albumName, fileName, size);
   var original = MediaUtils.originalPath(year, albumName, fileName);
 
   try {
-    if(exists(cached)) {
+    if(exists(cached) && !forceCacheInvalidation) {
       deferred.resolve(cached);
     } else {
       fs.openSync(cached, 'w');
@@ -107,12 +107,12 @@ function handleImageRequest(deferred, format, year, albumName, fileName, size) {
   }
 }
 
-function handleVideoRequest(deferred, format, year, albumName, fileName, size) {
+function handleVideoRequest(deferred, format, year, albumName, fileName, size, forceCacheInvalidation) {
   var cached = MediaUtils.cachedPathVideo(year, albumName, fileName, size, format);
   var original = MediaUtils.originalPath(year, albumName, fileName);
 
   try {
-    if(exists(cached)) {
+    if(exists(cached) && !forceCacheInvalidation) {
       deferred.resolve(cached);
     } else {
       resizeVideo(original, cached, format, size, deferred);
@@ -122,13 +122,14 @@ function handleVideoRequest(deferred, format, year, albumName, fileName, size) {
   }
 }
 
-exports.fromCacheOrGenerate = function (type, format, year, albumName, fileName, size) {
+exports.fromCacheOrGenerate = function (type, format, year, albumName, fileName, size, invalidateCachedEntry) {
+  var forceCacheInvalidation = invalidateCachedEntry || false;
   var deferred = Q.defer();
 
   if(type === 'image') {
-    handleImageRequest(deferred, format, year, albumName, fileName, size);
+    handleImageRequest(deferred, format, year, albumName, fileName, size, forceCacheInvalidation);
   } else if (type === 'video') {
-    handleVideoRequest(deferred, format, year, albumName, fileName, size);
+    handleVideoRequest(deferred, format, year, albumName, fileName, size, forceCacheInvalidation);
   } else {
     deferred.reject(new Error('I do not know what to do with type ' + type + '.'));
   }

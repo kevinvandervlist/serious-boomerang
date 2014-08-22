@@ -8,8 +8,8 @@ var flow = require('./flow')(uploadDir);
 
 exports.handleChunkCheck = function(req, res) {
   flow.get(req, function(status) {
-    var res = (status === 'found' ? 200 : 404);
-    res.status(res).send(res);
+    var resStatCode = (status === 'found' ? 200 : 404);
+    res.status(resStatCode).send(resStatCode);
   });
 };
 

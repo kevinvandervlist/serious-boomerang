@@ -76,23 +76,23 @@ function execution() {
 
 function handleImageJob(data) {
   return Cache
-    .fromCacheOrGenerate('image', 'jpg', data.album.year, data.album.name, data.media.name, 345)
+    .fromCacheOrGenerate('image', 'jpg', data.album.year, data.album.name, data.media.name, 345, true)
     .then(function() {
-      return Cache.fromCacheOrGenerate('image', 'jpg', data.album.year, data.album.name, data.media.name, 960);
+      return Cache.fromCacheOrGenerate('image', 'jpg', data.album.year, data.album.name, data.media.name, 960, true);
     });
 }
 
 function handleVideoJob(data) {
   return Cache
-    .fromCacheOrGenerate('video', 'webm', data.album.year, data.album.name, data.media.name, 345)
+    .fromCacheOrGenerate('video', 'webm', data.album.year, data.album.name, data.media.name, 345, true)
     .then(function() {
-      return Cache.fromCacheOrGenerate('video', 'webm', data.album.year, data.album.name, data.media.name, 960)
+      return Cache.fromCacheOrGenerate('video', 'webm', data.album.year, data.album.name, data.media.name, 960, true)
     })
     .then(function() {
-      return Cache.fromCacheOrGenerate('video', 'mp4', data.album.year, data.album.name, data.media.name, 345);
+      return Cache.fromCacheOrGenerate('video', 'mp4', data.album.year, data.album.name, data.media.name, 345, true);
     })
     .then(function() {
-      return Cache.fromCacheOrGenerate('video', 'mp4', data.album.year, data.album.name, data.media.name, 960);
+      return Cache.fromCacheOrGenerate('video', 'mp4', data.album.year, data.album.name, data.media.name, 960, true);
     })
 }
 
