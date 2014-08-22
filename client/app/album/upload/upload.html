@@ -5,13 +5,16 @@
     <h3 class="header">Upload nieuwe bestanden naar het album {{ albumName }}</h3>
     <p>Je kunt hier nieuwe bestanden uploaden. Deze zullen automatisch worden toegevoegd aan het album {{ albumName }}.</p>
 
-    <div ng-show="progress">
+    <div class="success" ng-show="progress">
       <p>Voortgang: {{ progress }}.</p>
       <p>Het kan even duren voordat ze zichtbaar zijn in het overzicht, aangezien ze even geprepareerd moeten worden.</p>
     </div>
+    <div>
+
+
 
     <div class="row">
-      <div flow-init="flowInit()"
+      <div class="col-lg-12" flow-init="flowInit()"
            ng-controller="UploadEventsCtrl"
            flow-files-submitted="$flow.upload()">
 
@@ -37,6 +40,7 @@
         </div>
       </div>
     </div>
+  </div>
   </div>
 </div>
 

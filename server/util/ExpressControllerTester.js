@@ -30,8 +30,8 @@ function send(status, body) {
   });
 }
 
-function sendfile(body, cb) {
-  assertValidCall('sendfile');
+function sendFile(body, cb) {
+  assertValidCall('sendFile');
   self.deferredResult.resolve({
     status: cb,
     body: body
@@ -54,7 +54,7 @@ var ExpressControllerTester = function (_testFunc, _doneFunc) {
   this.res = {
     'json': json,
     'send': send,
-    'sendfile': sendfile
+    'sendFile': sendFile
   };
 
   this.deferredResult = Q.defer();
