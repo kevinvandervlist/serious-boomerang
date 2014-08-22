@@ -5,6 +5,12 @@ angular.module('seriousBoomerangApp')
     $scope.user = {};
     $scope.errors = {};
 
+    $scope.fillCredentials = function(user, password) {
+      $scope.user.email = user;
+      $scope.user.password = password;
+
+    };
+
     $scope.login = function(form) {
       $scope.submitted = true;
 
@@ -15,7 +21,7 @@ angular.module('seriousBoomerangApp')
         })
         .then( function() {
           // Logged in, redirect to home
-          $location.path('/');
+          $location.path('/home');
         })
         .catch( function(err) {
           $scope.errors.other = err.message;

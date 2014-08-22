@@ -82,7 +82,6 @@ exports.createNewAlbum = function(req, res) {
     if(err) {
       return error(err);
     } else {
-      console.log(album);
       res.send(201);
     }
   });

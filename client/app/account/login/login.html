@@ -5,13 +5,13 @@
     <div class="col-sm-12">
       <h1>Login</h1>
 
-      <p>Accounts are reset on server restart from <code>server/config/seed.js</code>.</p>
+      <p>De onderstaande accounts zijn beschikbaar. Typ de credentials over of klik op een gebruiker.</p>
 
       <p>
       <ul>
-        <li><code>usera@b.c</code> / <code>test</code></li>
-        <li><code>userb@b.c</code> / <code>test</code></li>
-        <li><code>admin@b.c</code> / <code>test</code></li>
+        <li ng-click="fillCredentials('usera@b.c', 'test')"><code>usera@b.c</code> / <code>test</code></li>
+        <li ng-click="fillCredentials('userb@b.c', 'test')"><code>userb@b.c</code> / <code>test</code></li>
+        <li ng-click="fillCredentials('admin@b.c', 'test')"><code>admin@b.c</code> / <code>test</code></li>
       </ul>
       </p>
     </div>
