@@ -9,8 +9,6 @@ var Album = require('../album/album.model');
 var controller = require('./album.controller');
 var ExpressControllerTester = require('../../util/ExpressControllerTester');
 
-var temp = require('../permission/permission.verifier');
-
 var album, userA, userB, media;
 
 describe('Album Controller', function () {
@@ -91,4 +89,49 @@ describe('Album Controller', function () {
         result.should.have.length(1);
       });
   });
+
+  it('Should be able to create an album via the API', function(done) {
+    var stepOne = Q.defer();
+    var stepTwo = Q.defer();
+
+    ExpressControllerTester.doRequest(controller.all, function() { stepOne.resolve();})
+      .asUser(userA)
+      .asResponse('json')
+      .withValidation(function(result, code) {
+        code.should.be.exactly(200);
+        result.should.have.length(1);
+      });
+
+    stepOne.promise.then(function() {
+      ExpressControllerTester.doRequest(controller.createNewAlbum, function() {stepTwo.resolve();})
+        .asUser(userA)
+        .withBody({
+          name: 'een naam',
+          description: 'een beschrijving. Wat leuk',
+          startDate: '2014-01-01',
+          endDate: '2014-12-31'
+        })
+        .asResponse('send')
+        .withValidation(function(result, code) {
+          code.should.be.exactly(201);
+          result.should.have.length(0);
+        })
+    });
+
+    stepTwo.promise.then(function() {
+      ExpressControllerTester.doRequest(controller.all, done)
+        .asUser(userA)
+        .asResponse('json')
+        .withValidation(function(result, code) {
+          code.should.be.exactly(200);
+          result.should.have.length(2);
+          result[1].name.should.be.exactly('een naam');
+          result[1].description.should.be.exactly('een beschrijving. Wat leuk');
+          result[1].startDate.should.be.eql(new Date('2014-01-01'));
+          result[1].endDate.should.be.eql(new Date('2014-12-31'));
+        });
+    }, function(err) {
+      done(err);
+    });
+  })
 });

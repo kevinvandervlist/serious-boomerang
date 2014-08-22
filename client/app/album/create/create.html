@@ -9,8 +9,8 @@
       De rechten hiervoor zijn op <a href="/admin/albumpermissions">deze pagina</a> aan te passen.
     </p>
 
-    <p ng-show="success">
-      {{ success }}
+    <p class="success" ng-show="success">
+      {{ success }} Je kunt het <a ng-href="{{ albumURL }}">hier bekijken.</a>
     </p>
 
     <form name="createAlbum" ng-submit="submitNewAlbum()">
@@ -34,7 +34,7 @@
       <span class="input-lg error" ng-show="error">{{ error }}</span>
 
       <button type="submit" class="btn btn-success btn-lg btn-block">
-        <span class="glyphicon glyphicon-floppy-disk"></span>Opslaan
+        <span class="glyphicon glyphicon-floppy-disk">&nbsp;</span>Opslaan
       </button>
     </form>
   </div>

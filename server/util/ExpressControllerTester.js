@@ -2,14 +2,48 @@
 
 var Q = require('q');
 var should = require('should');
+var self;
 
 exports.fail = function(message) {
   should.exist(null, message);
 };
 
+function assertValidCall(name) {
+  if(self.expectedFuncs.indexOf(name) < 0) {
+    self.deferredResult.reject(new Error('The called function \'' + name + '\' was not expected. One of \'[' + self.expectedFuncs + ']\' was expected.'));
+  }
+}
+
+function json(status, body) {
+  assertValidCall('json');
+  self.deferredResult.resolve({
+    status: status,
+    body: body
+  });
+}
+
+function send(status, body) {
+  assertValidCall('send');
+  self.deferredResult.resolve({
+    status: status,
+    body: body
+  });
+}
+
+function sendfile(body, cb) {
+  assertValidCall('sendfile');
+  self.deferredResult.resolve({
+    status: cb,
+    body: body
+  });
+}
+
 var ExpressControllerTester = function (_testFunc, _doneFunc) {
+  self = this;
+
   this.testFunc = _testFunc;
   this.doneFunc = _doneFunc;
+  this.expectedFuncs = [];
 
   this.req = {
     params: {},
@@ -18,6 +52,9 @@ var ExpressControllerTester = function (_testFunc, _doneFunc) {
   };
 
   this.res = {
+    'json': json,
+    'send': send,
+    'sendfile': sendfile
   };
 
   this.deferredResult = Q.defer();
@@ -39,21 +76,7 @@ ExpressControllerTester.prototype.withBody = function(body) {
 };
 
 ExpressControllerTester.prototype.asResponse = function(expectedFunc) {
-  if (expectedFunc === 'sendfile') {
-    this.res.sendfile = function (body, cb) {
-      this.deferredResult.resolve({
-        status: cb,
-        body: body
-      });
-    }.bind(this);
-  } else {
-    this.res[expectedFunc] = function (status, body) {
-      this.deferredResult.resolve({
-        status: status,
-        body: body
-      });
-    }.bind(this);
-  }
+  this.expectedFuncs.push(expectedFunc);
   return this;
 };
 
@@ -76,6 +99,8 @@ ExpressControllerTester.prototype.withValidation = function(validator) {
       return;
     }
     this.doneFunc();
+  }.bind(this), function(err) {
+    this.doneFunc(err);
   }.bind(this));
 };
 

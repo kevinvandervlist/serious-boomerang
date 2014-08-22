@@ -127,6 +127,10 @@ describe('Media controller', function () {
   });
 
   it('should fail to retrieve a non existing file', function(done) {
+    var path = config.mediaDirectory + 'cache/2014/Foo/foo_345.jpg';
+    if(fs.existsSync(path)) {
+      fs.unlinkSync(path);
+    }
     mediaFoo.save(function() {
       ExpressControllerTester.doRequest(controller.getSingleFile, done)
         .withParams({
@@ -136,7 +140,6 @@ describe('Media controller', function () {
         })
         .asResponse('send')
         .withValidation(function (result, err) {
-          fs.unlink(config.mediaDirectory + 'cache/2014/Foo/foo_345.jpg');
           err.should.be.exactly(500);
         });
     });

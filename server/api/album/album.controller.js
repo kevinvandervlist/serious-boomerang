@@ -67,5 +67,23 @@ exports.albumDetailsByYearName = function (req, res) {
 };
 
 exports.createNewAlbum = function(req, res) {
-  res.send(501);
+  function error(err) {
+    return res.json(422, err);
+  }
+
+  var album = new Album({
+    name: req.body.name,
+    description: req.body.description,
+    startDate: req.body.startDate,
+    endDate: req.body.endDate
+  });
+
+  album.save(function(err) {
+    if(err) {
+      return error(err);
+    } else {
+      console.log(album);
+      res.send(201);
+    }
+  });
 };
