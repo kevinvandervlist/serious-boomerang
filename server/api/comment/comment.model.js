@@ -4,6 +4,7 @@ var mongoose = require('mongoose');
 var Media = require('../media/media.model');
 var User = require('../user/user.model');
 var Album = require('../album/album.model');
+var StringUtils = require('../../util/StringUtils');
 var Schema = mongoose.Schema;
 
 var CommentSchema = new Schema({
@@ -36,7 +37,7 @@ var CommentSchema = new Schema({
 CommentSchema
   .path('mediaId')
   .validate(function (v) {
-    return v.length;
+    return '' !== v && undefined !== v;
   }, 'mediaId name cannot be blank');
 
 CommentSchema
@@ -53,7 +54,7 @@ CommentSchema
 CommentSchema
   .path('albumId')
   .validate(function (v) {
-    return v.length;
+    return '' !== v && undefined !== v;
   }, 'albumId name cannot be blank');
 
 CommentSchema
@@ -70,7 +71,7 @@ CommentSchema
 CommentSchema
   .path('author')
   .validate(function (v) {
-    return v.length;
+    return '' !== v && undefined !== v;
   }, 'Author cannot be blank');
 
 CommentSchema
@@ -87,13 +88,13 @@ CommentSchema
 CommentSchema
   .path('text')
   .validate(function (v) {
-    return v.length;
+    return StringUtils.isNotEmpty(v);
   }, 'Text cannot be left blank');
 
 CommentSchema
   .path('timestamp')
   .validate(function (v) {
-    return v.length;
+    return '' !== v && undefined !== v;
   }, 'Timestamp cannot be blank');
 
 module.exports = mongoose.model('Comment', CommentSchema);

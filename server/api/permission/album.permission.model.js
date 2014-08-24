@@ -3,6 +3,7 @@
 var mongoose = require('mongoose');
 var Album = require('../album/album.model');
 var User = require('../user/user.model');
+var StringUtils = require('../../util/StringUtils');
 var Schema = mongoose.Schema;
 
 var AlbumPermissionSchema = new Schema({
@@ -21,7 +22,7 @@ var AlbumPermissionSchema = new Schema({
 AlbumPermissionSchema
   .path('appliedAlbumId')
   .validate(function (v) {
-    return v.length;
+    return '' !== v && undefined !== v;
   }, 'appliedAlbumId cannot be blank');
 
 AlbumPermissionSchema
@@ -38,7 +39,7 @@ AlbumPermissionSchema
 AlbumPermissionSchema
   .path('referencedUserId')
   .validate(function (v) {
-    return v.length;
+    return '' !== v && undefined !== v;
   }, 'referencedUserId cannot be blank');
 
 AlbumPermissionSchema

@@ -1,0 +1,10 @@
+<div class="row comments">
+  <div class="col-centered comment" ng-repeat="c in availableComments" ng-class-odd="'oddcomment'" ng-class-even="'evencomment'">
+    <div class="commentheader">
+      Geplaatst door <span class="commentauthor">{{ c.author.name }}</span> op <span class="commenttimestamp">{{ HtmlUtilities.humanReadableTimestamp(c.timestamp) }}</span>
+    </div>
+    <div class="commentcontent">
+      {{ c.text }}
+    </div>
+  </div>
+</div>

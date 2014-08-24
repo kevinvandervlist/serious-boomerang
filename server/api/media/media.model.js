@@ -2,6 +2,7 @@
 
 var mongoose = require('mongoose');
 var Album = require('../album/album.model');
+var StringUtils = require('../../util/StringUtils');
 var Schema = mongoose.Schema;
 
 var allowed_types = ['image', 'video'];
@@ -35,7 +36,7 @@ var MediaSchema = new Schema({
 MediaSchema
   .path('albumId')
   .validate(function (v) {
-    return v.length;
+    return '' !== v && undefined !== v;
   }, 'albumId name cannot be blank');
 
 MediaSchema
@@ -64,13 +65,13 @@ MediaSchema
 MediaSchema
   .path('name')
   .validate(function (v) {
-    return v.length;
+    return StringUtils.isNotEmpty(v);
   }, 'name cannot be blank');
 
 MediaSchema
   .path('mediaType')
   .validate(function (v) {
-    return v.length && allowed_types.indexOf(v) > -1;
+    return StringUtils.isNotEmpty(v) && allowed_types.indexOf(v) > -1;
   }, 'mediaType cannot be blank');
 
 module.exports = mongoose.model('Media', MediaSchema);

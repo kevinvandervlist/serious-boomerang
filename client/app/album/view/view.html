@@ -45,15 +45,8 @@
           <span class="glyphicon glyphicon-chevron-up navigation-glyph" ng-click="setMedia(undefined)">&nbsp;</span>
           <span class="glyphicon glyphicon-chevron-right navigation-glyph" ng-show="hasMediaAtPosition(nextMediaID)" ng-click="setMedia(nextMediaID)">&nbsp;</span>
         </div>
-        <div class="row comments">
-          <div class="col-xs-12 col-centered comment" ng-repeat="c in comments | orderBy:'timestamp'" ng-class-odd="'oddcomment'" ng-class-even="'evencomment'">
-            <div class="commentheader">
-              Geplaatst door <span class="commentauthor">{{ c.author.name }}</span> op <span class="commenttimestamp">{{ util.humanReadableTimestamp(c.timestamp) }}</span>
-            </div>
-            <div class="commentcontent">
-              {{ c.text }}
-            </div>
-          </div>
+        <div>
+          <comment-block comments="comments"></comment-block>
         </div>
         <div class="row write-comment">
           <form ng-submit="saveCommentById()">

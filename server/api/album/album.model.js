@@ -2,6 +2,7 @@
 
 var mongoose = require('mongoose');
 var Location = require('../location/location.model');
+var StringUtils = require('../../util/StringUtils');
 var Schema = mongoose.Schema;
 
 var AlbumSchema = new Schema({
@@ -31,14 +32,14 @@ var AlbumSchema = new Schema({
 
 AlbumSchema
   .path('name')
-  .validate(function(name) {
-    return name.length;
+  .validate(function(v) {
+    return StringUtils.isNotEmpty(v);
   }, 'Album name cannot be blank');
 
 AlbumSchema
   .path('description')
-  .validate(function(desc) {
-    return desc.length;
+  .validate(function(v) {
+    return StringUtils.isNotEmpty(v);
   }, 'Description cannot be blank');
 
 AlbumSchema

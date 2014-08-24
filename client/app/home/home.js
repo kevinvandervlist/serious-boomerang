@@ -5,6 +5,7 @@ angular.module('seriousBoomerangApp')
     $stateProvider
       .state('home', {
         url: '/home',
+        controller: 'homeCommentCtrl',
         templateUrl: 'app/home/home.html'
       });
   });
