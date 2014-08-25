@@ -342,6 +342,12 @@ module.exports = function (grunt) {
           src: ['bower_components/bootstrap/fonts/*.*']
         }, {
           expand: true,
+          flatten: false,
+          cwd: '<%= yeoman.client %>',
+          dest: '<%= yeoman.dist %>/public',
+          src: ['app/directives/**/*.html']
+        }, {
+          expand: true,
           dest: '<%= yeoman.dist %>',
           src: [
             'package.json',
