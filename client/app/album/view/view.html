@@ -20,33 +20,18 @@
     <!-- Single media -> detailed view -->
     <div class="animate-switch" ng-switch-when="false">
       <div>
-        <div class="row slide slide-animation non-draggable-image" ng-switch on="selectedMedia.mediaType"
+        <div class="row slide slide-animation non-draggable-image"
              ng-swipe-right="setMedia(prevMediaID)" ng-swipe-left="setMedia(nextMediaID)">
-          <div ng-switch-when="image">
-            <img
-              class="showcase center-block"
-              ng-src="{{ util.asTrustedResource(selectedMedia.url, largeSize) }}"
-              alt="{{ selectedMedia.name }}"
-              ng-left="setMedia(prevMediaID)"
-              ng-right="setMedia(nextMediaID)"
-              tabindex="0"
-              >
-          </div>
-          <div ng-switch-when="video">
-            <video controls preload="metadata">
-              <source ng-src="{{ util.asTrustedResource(selectedMedia.url.webm, largeSize) }}" type="video/webm">
-              <source ng-src="{{ util.asTrustedResource(selectedMedia.url.mp4, largeSize) }}" type="video/mp4">
-              Your browser does not support the <code>video</code> element.
-            </video>
-          </div>
+          <show-media-file media-file="selectedMedia" size="960" />
         </div>
         <div class="row controls">
-          <span class="glyphicon glyphicon-chevron-left navigation-glyph" ng-show="hasMediaAtPosition(prevMediaID)" ng-click="setMedia(prevMediaID)">&nbsp;</span>
-          <span class="glyphicon glyphicon-chevron-up navigation-glyph" ng-click="setMedia(undefined)">&nbsp;</span>
-          <span class="glyphicon glyphicon-chevron-right navigation-glyph" ng-show="hasMediaAtPosition(nextMediaID)" ng-click="setMedia(nextMediaID)">&nbsp;</span>
+          <span class="navigation-glyph ctrl-left" ng-hide="hasMediaAtPosition(prevMediaID)">&nbsp;</span>
+          <span class="glyphicon glyphicon-chevron-left navigation-glyph ctrl-left" ng-show="hasMediaAtPosition(prevMediaID)" ng-click="setMedia(prevMediaID)"></span>
+          <span class="glyphicon glyphicon-chevron-right navigation-glyph ctrl-right" ng-show="hasMediaAtPosition(nextMediaID)" ng-click="setMedia(nextMediaID)"></span>
+          <span class="glyphicon glyphicon-chevron-up navigation-glyph ctrl-middle" ng-click="setMedia(undefined)"></span>
         </div>
         <div>
-          <comment-block comments="comments"></comment-block>
+          <comment-block comments="comments" />
         </div>
         <div class="row write-comment">
           <form ng-submit="saveCommentById()">
@@ -63,19 +48,7 @@
       <!-- Overview -->
       <div class="row row-centered">
         <div class="col-xs-4 col-centered media-data" ng-repeat="m in media">
-          <div ng-switch on="m.mediaType">
-            <img
-              ng-switch-when="image"
-              class="media"
-              ng-src="{{ util.asTrustedResource(m.url, thumbSize) }}"
-              alt="{{ m.name }}" ng-click="setMedia($index)"
-              >
-            <video ng-switch-when="video" class="media" controls preload="metadata">
-              <source ng-src="{{ util.asTrustedResource(m.url.webm, thumbSize) }}" type="video/webm">
-              <source ng-src="{{ util.asTrustedResource(m.url.mp4, thumbSize) }}" type="video/mp4">
-              Your browser does not support the <code>video</code> element.
-            </video>
-          </div>
+          <show-media-file ng-click="setMedia($index)" media-file="m" size="345" />
         </div>
       </div>
     </div>

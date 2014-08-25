@@ -84,8 +84,6 @@ angular.module('seriousBoomerangApp')
 
     $scope.album = null;
     $scope.media = [];
-    $scope.thumbSize = '345';
-    $scope.largeSize = '960';
 
     $scope.selectedMedia = undefined;
     $scope.prevMediaID = undefined;

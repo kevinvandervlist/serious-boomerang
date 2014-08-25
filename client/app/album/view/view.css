@@ -9,9 +9,25 @@
   max-height: 98%;
 }
 
-.controls img {
-  min-width: 10%;
-  max-width: 25%;
+.controls {
+  width: 100%;
+}
+
+.controls .ctrl-left {
+  float: left;
+  width: 33%;
+}
+
+.controls .ctrl-middle {
+  margin: 0 auto;
+  text-align: center;
+  width: 33%;
+}
+
+.controls .ctrl-right {
+  float: right;
+  text-align: right;
+  width: 33%;
 }
 
 .comment {

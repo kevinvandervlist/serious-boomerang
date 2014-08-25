@@ -1,0 +1,17 @@
+<div ng-switch on="mediaFile.mediaType">
+  <div ng-switch-when="image">
+    <img
+        class="showcase center-block"
+        ng-src="{{ HtmlUtilities.asTrustedResource(mediaFile.url, size) }}"
+        alt="{{ mediaFile.name }}"
+        tabindex="0"
+        >
+  </div>
+  <div ng-switch-when="video">
+    <video controls preload="metadata">
+      <source ng-src="{{ HtmlUtilities.asTrustedResource(mediaFile.url.webm, size) }}" type="video/webm">
+      <source ng-src="{{ HtmlUtilities.asTrustedResource(mediaFile.url.mp4, size) }}" type="video/mp4">
+      Your browser does not support the <code>video</code> element.
+    </video>
+  </div>
+</div>
